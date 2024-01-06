@@ -150,6 +150,7 @@
     <ClCompile Include="LifeTree.cpp" />
     <ClCompile Include="LifeTreeBullet.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="Mimic.cpp" />
     <ClCompile Include="MimicAbility.cpp" />
     <ClCompile Include="MimicBullet.cpp" />
@@ -190,6 +191,7 @@
     <ClInclude Include="HUD.h" />
     <ClInclude Include="LifeTree.h" />
     <ClInclude Include="LifeTreeBullet.h" />
+    <ClInclude Include="MainMenu.h" />
     <ClInclude Include="Mimic.h" />
     <ClInclude Include="MimicAbility.h" />
     <ClInclude Include="MimicBullet.h" />

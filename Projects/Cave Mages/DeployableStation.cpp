@@ -7,6 +7,7 @@ DeployableStation::DeployableStation()
 	// Associate a texture with the sprite
 	m_Sprite = Sprite(TextureHolder::GetTexture(
 		"graphics/deployable-station.png"));
+	m_Sprite.setScale(.5, .5);
 
 	// Load the font
 	m_Font.loadFromFile("fonts/impact.ttf");

@@ -7,6 +7,7 @@ ShieldStation::ShieldStation()
 	// Associate a texture with the sprite
 	m_Sprite = Sprite(TextureHolder::GetTexture(
 		"graphics/shield-station.png"));
+	m_Sprite.setScale(.5, .5);
 }
 
 void ShieldStation::spawn(IntRect arena, Vector2f resolution, int tileSize)

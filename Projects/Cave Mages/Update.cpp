@@ -5,6 +5,24 @@ using namespace sf;
 
 void Engine::update(float dtAsSeconds)
 {
+	if (m_inMainMenu)
+	{
+		// Where is the mouse pointer
+		mouseScreenPosition = Mouse::getPosition();
+
+		// Convert mouse position to world coordinates of HudView
+		mouseWorldPosition = m_Window.mapPixelToCoords(
+			Mouse::getPosition(), m_HudView);
+
+		// Hide the mouse curser
+		m_Window.setMouseCursorVisible(false);
+
+		// Set the crosshair to the mouse world location
+		spriteCrosshair.setPosition(mouseWorldPosition);
+
+		m_MainMenu.update();
+	}
+
 	if (m_Playing)
 	{
 		if (m_NewWaveRequired)

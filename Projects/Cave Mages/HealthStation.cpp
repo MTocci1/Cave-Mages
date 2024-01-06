@@ -7,6 +7,7 @@ HealthStation::HealthStation()
 	// Associate a texture with the sprite
 	m_Sprite = Sprite(TextureHolder::GetTexture(
 		"graphics/health-station.png"));
+	m_Sprite.setScale(.5, .5);
 }
 
 void HealthStation::spawn(IntRect arena, Vector2f resolution, int tileSize)

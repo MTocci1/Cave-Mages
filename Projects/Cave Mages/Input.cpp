@@ -1,4 +1,5 @@
 #include "Engine.h"
+#include <iostream>
 
 void Engine::input()
 {
@@ -19,6 +20,35 @@ void Engine::input()
 			}
 		}
 	}
+
+	if (m_inMainMenu)
+	{
+		// Player clicks play
+		bool hoveringPlay = false;
+		if (spriteCrosshair.getGlobalBounds().intersects(m_MainMenu.getPlayText().getGlobalBounds()))
+		{
+			hoveringPlay = true;
+			if (Mouse::isButtonPressed(Mouse::Left))
+			{
+				m_Playing = true;
+				m_inMainMenu = false;
+			}
+		}
+		m_MainMenu.setHoveringPlay(hoveringPlay);
+
+		// Player clicks exit
+		bool hoveringExit = false;
+		if (spriteCrosshair.getGlobalBounds().intersects(m_MainMenu.getExitText().getGlobalBounds()))
+		{
+			hoveringExit = true;
+			if (Mouse::isButtonPressed(Mouse::Left))
+			{
+				m_Window.close();
+			}
+		}
+		m_MainMenu.setHoveringExit(hoveringExit);
+	}
+
 	if (m_Playing)
 	{
 		if (Mouse::isButtonPressed(Mouse::Left))

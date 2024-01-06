@@ -9,7 +9,25 @@ void Engine::draw()
 	// Draw the background
 	m_Window.draw(background, &textureBackground);
 
+	if (m_inMainMenu) {
+		// Display the Main  Menu
+		// Set HUD View
+		m_Window.setView(m_HudView);
+
+		m_Window.draw(m_MainMenu.getPlayText());
+
+		m_Window.draw(m_MainMenu.getExitText());
+
+		m_Window.draw(m_MainMenu.getLogo());
+
+		// Crosshair
+		m_Window.draw(spriteCrosshair);
+	}
+
 	if (m_Playing) {
+		// Main View of player
+		m_Window.setView(m_MainView);
+
 		// Obstacles
 		// Water
 		for (const auto& obstacle : obstacles) {

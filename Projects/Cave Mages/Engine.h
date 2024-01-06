@@ -35,6 +35,7 @@
 #include "LifeTreeBullet.h"
 #include "FireTurret.h"
 #include "FireTurretBullet.h"
+#include "MainMenu.h"
 
 
 using namespace sf;
@@ -100,6 +101,9 @@ private:
 	// The HUD
 	Hud m_Hud;
 
+	// The Main Menu
+	MainMenu m_MainMenu;
+
 	// Vector of bullets
 	// Player Bullets
 	vector<Bullet*> bullets;
@@ -146,8 +150,10 @@ private:
 	// Where is the mouse in relation to screen coordinates
 	Vector2i mouseScreenPosition;
 
-	// Player begins game not playing, paused
+	// GAME STATES
+	// Player begins game not playing, in main menu
 	bool m_Playing = false;
+	bool m_inMainMenu = true;
 
 	// Private functions for internal use only
 	void input();
