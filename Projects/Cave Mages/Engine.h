@@ -36,6 +36,7 @@
 #include "FireTurret.h"
 #include "FireTurretBullet.h"
 #include "MainMenu.h"
+#include "DeployMenu.h"
 
 
 using namespace sf;
@@ -104,6 +105,9 @@ private:
 	// The Main Menu
 	MainMenu m_MainMenu;
 
+	// The deploy menu
+	DeployMenu m_DeployMenu;
+
 	// Vector of bullets
 	// Player Bullets
 	vector<Bullet*> bullets;
@@ -150,10 +154,19 @@ private:
 	// Where is the mouse in relation to screen coordinates
 	Vector2i mouseScreenPosition;
 
+	DeployableStation* m_currentDeployableStation;
+	Vector2f m_deployPosition;
+
+	// Deployable Variables
+	int m_deployableStationsToSpawn;
+	int turretCost;
+	int treeCost;
+
 	// GAME STATES
-	// Player begins game not playing, in main menu
-	bool m_Playing = false;
+	// Player begins game in main menu
 	bool m_inMainMenu = true;
+	bool m_Playing = false;
+	bool m_PickingDeployable = false;
 
 	// Private functions for internal use only
 	void input();

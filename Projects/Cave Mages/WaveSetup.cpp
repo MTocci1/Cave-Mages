@@ -91,23 +91,10 @@ void Engine::loadWave()
         ShieldStation* shieldStation = new ShieldStation();
         obstacles.push_back(shieldStation);
         // Create Deployable Stations (3)
-        for (int i = 0; i < 3; ++i) {
+        for (int i = 0; i < m_deployableStationsToSpawn; ++i) {
             Obstacle* deployable = new DeployableStation();
             obstacles.push_back(deployable);
         }
-
-
-
-        // TEST LIFE TREE
-        Deployable* lifeTree = new LifeTree(Vector2f (m_fireMage.getCenter().x, m_fireMage.getCenter().y + 500));
-        deployables.push_back(lifeTree);
-        // TEST LIFE FIRE TURRET
-        Deployable* fireTurret = new FireTurret(Vector2f(m_fireMage.getCenter().x, m_fireMage.getCenter().y - 500));
-        deployables.push_back(fireTurret);
-
-
-
-
 
         // Spawn Everything
         // Spawn Enemies
@@ -180,6 +167,40 @@ void Engine::loadWave()
                 }
             }
 
+            // Check for enemy-deployable intersections
+            for (Enemy* enemy : enemies) {
+                for (Deployable* deployable : deployables) {
+                    if (enemy->getPosition().intersects(deployable->getPosition())) {
+                        intersectFound = true;
+                        // Spawn a new enemy or obstacle or handle the intersection as needed
+                        enemy->spawn(arena, resolution, TILE_SIZE);
+                        // Restart the loop to check for intersections again
+                        intersectFound = false;
+                        break;
+                    }
+                }
+                if (intersectFound) {
+                    break;
+                }
+            }
+
+            // Check for obstacle-deployable intersections
+            for (Obstacle* obstacle : obstacles) {
+                for (Deployable* deployable : deployables) {
+                    if (obstacle->getPosition().intersects(deployable->getPosition())) {
+                        intersectFound = true;
+                        // Spawn a new enemy or obstacle or handle the intersection as needed
+                        obstacle->spawn(arena, resolution, TILE_SIZE);
+                        // Restart the loop to check for intersections again
+                        intersectFound = false;
+                        break;
+                    }
+                }
+                if (intersectFound) {
+                    break;
+                }
+            }
+
             // Check for dummy-enemy intersections
             for (Enemy* enemy : enemies) {
                 if (m_dummy.getPosition().intersects(enemy->getPosition())) {
@@ -204,6 +225,18 @@ void Engine::loadWave()
                 }
             }
 
+            // Check for dummy-deployable intersections
+            for (Deployable* deployable : deployables) {
+                if (m_dummy.getPosition().intersects(deployable->getPosition())) {
+                    intersectFound = true;
+                    // Handle the intersection as needed, e.g., respawn m_dummy
+                    m_dummy.spawn(arena, resolution, TILE_SIZE);
+                    // Restart the loop to check for intersections again
+                    intersectFound = false;
+                    break;
+                }
+            }
+
             // Check for snail-enemy intersections
             for (Enemy* enemy : enemies) {
                 if (m_Snail.getPosition().intersects(enemy->getPosition())) {
@@ -219,6 +252,18 @@ void Engine::loadWave()
             // Check for snail-obstacle intersections
             for (Obstacle* obstacle : obstacles) {
                 if (m_Snail.getPosition().intersects(obstacle->getPosition())) {
+                    intersectFound = true;
+                    // Handle the intersection as needed, e.g., respawn m_Snail
+                    m_Snail.spawn(arena, resolution, TILE_SIZE);
+                    // Restart the loop to check for intersections again
+                    intersectFound = false;
+                    break;
+                }
+            }
+
+            // Check for snail-deployable intersections
+            for (Deployable* deployable : deployables) {
+                if (m_Snail.getPosition().intersects(deployable->getPosition())) {
                     intersectFound = true;
                     // Handle the intersection as needed, e.g., respawn m_Snail
                     m_Snail.spawn(arena, resolution, TILE_SIZE);
@@ -313,6 +358,23 @@ void Engine::loadWave()
                 }
             }
 
+            // Check for obstacle-deployable intersections
+            for (Obstacle* obstacle : obstacles) {
+                for (Deployable* deployable : deployables) {
+                    if (obstacle->getPosition().intersects(deployable->getPosition())) {
+                        intersectFound = true;
+                        // Spawn a new enemy or obstacle or handle the intersection as needed
+                        obstacle->spawn(arena, resolution, TILE_SIZE);
+                        // Restart the loop to check for intersections again
+                        intersectFound = false;
+                        break;
+                    }
+                }
+                if (intersectFound) {
+                    break;
+                }
+            }
+
             // Check for dummy-obstacle intersections
             for (Obstacle* obstacle : obstacles) {
                 if (m_dummy.getPosition().intersects(obstacle->getPosition())) {
@@ -325,9 +387,33 @@ void Engine::loadWave()
                 }
             }
 
+            // Check for dummy-deployable intersections
+            for (Deployable* deployable : deployables) {
+                if (m_dummy.getPosition().intersects(deployable->getPosition())) {
+                    intersectFound = true;
+                    // Handle the intersection as needed, e.g., respawn m_dummy
+                    m_dummy.spawn(arena, resolution, TILE_SIZE);
+                    // Restart the loop to check for intersections again
+                    intersectFound = false;
+                    break;
+                }
+            }
+
             // Check for snail-obstacle intersections
             for (Obstacle* obstacle : obstacles) {
                 if (m_Snail.getPosition().intersects(obstacle->getPosition())) {
+                    intersectFound = true;
+                    // Handle the intersection as needed, e.g., respawn m_Snail
+                    m_Snail.spawn(arena, resolution, TILE_SIZE);
+                    // Restart the loop to check for intersections again
+                    intersectFound = false;
+                    break;
+                }
+            }
+
+            // Check for snail-deployable intersections
+            for (Deployable* deployable : deployables) {
+                if (m_Snail.getPosition().intersects(deployable->getPosition())) {
                     intersectFound = true;
                     // Handle the intersection as needed, e.g., respawn m_Snail
                     m_Snail.spawn(arena, resolution, TILE_SIZE);

@@ -29,6 +29,10 @@ Engine::Engine()
 	arena.left = 0;
 	arena.top = 0;
 
+	m_deployableStationsToSpawn = 3;
+	turretCost = 600;
+	treeCost = 600;
+
 	m_fireMage.spawn(arena, resolution, TILE_SIZE);
 
 	// Load the texture for our background vertex array

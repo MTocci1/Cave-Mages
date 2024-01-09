@@ -30,6 +30,10 @@ private:
 	// And a texture
 	Texture m_Texture;
 
+	// Keep Track of where the enemy is facing
+	bool m_facingLeft;
+	bool m_facingRight;
+
 public:
 	Snail();
 
@@ -50,4 +54,8 @@ public:
 	void cancelMovement();
 
 	void setIsOnWater(bool isSpiderOnWater);
+
+	void setFacingDirection(bool isAimingRight);
+
+	bool getFacingDirection();
 };

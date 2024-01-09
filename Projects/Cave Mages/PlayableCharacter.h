@@ -135,6 +135,8 @@ public:
 
 	void touchedXP(int value);
 
+	void spentXP(int amount);
+
 	void activatePossession();
 
 	void activatePoison();
@@ -150,5 +152,7 @@ public:
 	void shield(int amount);
 
 	void startAbilityCooldown();
+
+	void setFacingDirection(bool isAimingRight);
 
 };// End of the class

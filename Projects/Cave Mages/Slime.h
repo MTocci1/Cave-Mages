@@ -27,6 +27,8 @@ public:
 	// Check if the player is in enemy range
 	void virtual isPlayerInRange(Vector2f playerPosition);
 
+	void setFacingDirection(bool isAimingRight);
+
 	void eatenEnemy();
 
 	void touchedOtherSlime(int level, int health);

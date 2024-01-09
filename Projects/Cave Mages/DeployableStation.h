@@ -11,6 +11,8 @@ private:
 
 	int m_UpgradeCost;
 
+	bool m_isPlayerInRange;
+
 public:
 	DeployableStation();
 
@@ -25,4 +27,8 @@ public:
 	Text getText();
 
 	void isPlayerInRange(Vector2f playerPosition);
+
+	bool getIsPlayerInRange();
+
+	bool getIsSpawned();
 };

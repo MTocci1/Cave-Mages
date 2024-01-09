@@ -42,8 +42,6 @@ void PlayableCharacter::update(float elapsedTime)
 	// Move the player
 	if (m_LeftPressed)
 	{
-		m_facingLeft = true;
-		m_facingRight = false;
 		if (m_isOnWater) {
 			m_Position.x -= m_SpeedOnWater * elapsedTime * factor;
 		}
@@ -53,8 +51,6 @@ void PlayableCharacter::update(float elapsedTime)
 	}
 	if (m_RightPressed)
 	{
-		m_facingRight = true;
-		m_facingLeft = false;
 		if (m_isOnWater) {
 			m_Position.x += m_SpeedOnWater * elapsedTime * factor;
 		}
@@ -355,4 +351,32 @@ int PlayableCharacter::getXP()
 void PlayableCharacter::touchedXP(int value)
 {
 	m_XP += value;
+}
+
+void PlayableCharacter::spentXP(int value)
+{
+	m_XP -= value;
+}
+
+void PlayableCharacter::setFacingDirection(bool isAimingRight)
+{
+	if (isAimingRight)
+	{
+		m_facingRight = true;
+		m_facingLeft = false;
+
+		m_Sprite.setScale(.25, .25);
+
+		m_Sprite.setOrigin(0, 0);
+
+
+	}
+	else {
+		m_facingRight = false;
+		m_facingLeft = true;
+
+		m_Sprite.setScale(-.25, .25);
+
+		m_Sprite.setOrigin(m_Sprite.getLocalBounds().width, 0);
+	}
 }

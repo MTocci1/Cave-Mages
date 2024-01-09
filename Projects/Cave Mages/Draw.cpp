@@ -224,6 +224,25 @@ void Engine::draw()
 		}
 	}
 
+	if (m_PickingDeployable) {
+		// Display the Deployable Menu
+		// Set HUD View
+		m_Window.setView(m_HudView);
+
+		m_Window.draw(m_DeployMenu.getChooseDeployableText());
+
+		m_Window.draw(m_DeployMenu.getTreeIcon());
+
+		m_Window.draw(m_DeployMenu.getTurretIcon());
+
+		m_Window.draw(m_DeployMenu.getTreeUpgradeCost());
+
+		m_Window.draw(m_DeployMenu.getTurretUpgradeCost());
+
+		// Crosshair
+		m_Window.draw(spriteCrosshair);
+	}
+
 	// Show everything we have just drawn
 	m_Window.display();
 }

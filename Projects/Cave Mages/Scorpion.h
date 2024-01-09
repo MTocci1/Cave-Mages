@@ -32,5 +32,7 @@ public:
 	// Check if the player is in enemy range
 	void virtual isPlayerInRange(Vector2f playerPosition);
 
+	void setFacingDirection(bool isAimingRight);
+
 	void activateFlee();
 };

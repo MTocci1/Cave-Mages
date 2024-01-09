@@ -86,9 +86,11 @@ void DeployableStation::isPlayerInRange(Vector2f playerPosition)
 	// Check if the distance is within the specified range
 	if (distance <= range) {
 		showText();
+		m_isPlayerInRange = true;
 	}
 	else {
 		hideText();
+		m_isPlayerInRange = false;
 	}
 }
 
@@ -100,7 +102,7 @@ void DeployableStation::showText()
 		getCenter().y - textRect.height / 2
 	);
 	String cost = std::to_string(m_UpgradeCost);
-	m_Text.setString("Press [F] To Upgrade (" + cost + " XP)");
+	m_Text.setString("Press [F] To Upgrade");
 	
 }
 
@@ -117,4 +119,14 @@ Text DeployableStation::getText()
 int DeployableStation::getUpgradeCost()
 {
 	return m_UpgradeCost;
+}
+
+bool DeployableStation::getIsPlayerInRange()
+{
+	return m_isPlayerInRange;
+}
+
+bool DeployableStation::getIsSpawned()
+{
+	return m_isSpawned;
 }

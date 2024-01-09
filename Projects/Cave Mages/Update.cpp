@@ -23,6 +23,24 @@ void Engine::update(float dtAsSeconds)
 		m_MainMenu.update();
 	}
 
+	if (m_PickingDeployable)
+	{
+		// Where is the mouse pointer
+		mouseScreenPosition = Mouse::getPosition();
+
+		// Convert mouse position to world coordinates of HudView
+		mouseWorldPosition = m_Window.mapPixelToCoords(
+			Mouse::getPosition(), m_HudView);
+
+		// Hide the mouse curser
+		m_Window.setMouseCursorVisible(false);
+
+		// Set the crosshair to the mouse world location
+		spriteCrosshair.setPosition(mouseWorldPosition);
+
+		m_DeployMenu.update(turretCost, treeCost);
+	}
+
 	if (m_Playing)
 	{
 		if (m_NewWaveRequired)
@@ -64,6 +82,18 @@ void Engine::update(float dtAsSeconds)
 
 		// Set the crosshair to the mouse world location
 		spriteCrosshair.setPosition(mouseWorldPosition);
+
+
+		// Set the direction the player is facing
+		bool isAimingRight = false;
+		if (mouseWorldPosition.x > m_fireMage.getCenter().x - 150) {
+			isAimingRight = true;
+		}
+		m_fireMage.setFacingDirection(isAimingRight);
+		if (m_Mimic.getIsAlive())
+		{
+			m_Mimic.setFacingDirection(isAimingRight);
+		}
 
 		// Update fireMage
 		m_fireMage.update(dtAsSeconds);
@@ -144,10 +174,12 @@ void Engine::update(float dtAsSeconds)
 		// Player collide with DeployableStation
 		for (const auto& obstacle : obstacles) {
 			if (auto* deployable = dynamic_cast<DeployableStation*>(obstacle)) {
-				if (m_fireMage.getPosition().intersects(deployable->getPosition())) {
-					m_fireMage.cancelMovement();
-					// Exit the loop once a collision is detected
-					break;
+				if (deployable->getIsSpawned()) {
+					if (m_fireMage.getPosition().intersects(deployable->getPosition())) {
+						m_fireMage.cancelMovement();
+						// Exit the loop once a collision is detected
+						break;
+					}
 				}
 			}
 		}
@@ -159,11 +191,14 @@ void Engine::update(float dtAsSeconds)
 				break;
 			}
 		}
+
 		// Is player in range of Deployable Station?
 		// Player collide with DeployableStation
 		for (const auto& obstacle : obstacles) {
 			if (auto* deployable = dynamic_cast<DeployableStation*>(obstacle)) {
-				deployable->isPlayerInRange(m_fireMage.getCenter());
+				if (deployable->getIsSpawned()) {
+					deployable->isPlayerInRange(m_fireMage.getCenter());
+				}
 			}
 		}
 
@@ -285,8 +320,7 @@ void Engine::update(float dtAsSeconds)
 		// Has a enemy besides ghost and slime touched a rock?
 		for (const auto& enemy : enemies) {
 			if (enemy->getIsAlive() && !dynamic_cast<Ghost*>(enemy) && !dynamic_cast<Slime*>(enemy)) {
-				for (const auto& obstacle : obstacles)
-				{
+				for (const auto& obstacle : obstacles){
 					if (auto* rock = dynamic_cast<Wall*>(obstacle))
 						if (enemy->getPosition().intersects(rock->getPosition()))
 						{
@@ -295,11 +329,25 @@ void Engine::update(float dtAsSeconds)
 				}
 			}
 		}
+		// Has a enemy besides ghost and slime touched a deployable station?
+		for (const auto& enemy : enemies) {
+			if (enemy->getIsAlive() && !dynamic_cast<Ghost*>(enemy) && !dynamic_cast<Slime*>(enemy)) {
+				for (const auto& obstacle : obstacles){
+					if (auto* station = dynamic_cast<DeployableStation*>(obstacle)) {
+						if (station->getIsSpawned()) {
+							if (enemy->getPosition().intersects(station->getPosition()))
+							{
+								enemy->cancelMovement();
+							}
+						}
+					}
+				}
+			}
+		}
 		// Has a enemy besides ghost and slime touched a deployable?
 		for (const auto& enemy : enemies) {
 			if (enemy->getIsAlive() && !dynamic_cast<Ghost*>(enemy) && !dynamic_cast<Slime*>(enemy)) {
-				for (const auto& deployable : deployables)
-				{
+				for (const auto& deployable : deployables){
 					if (enemy->getPosition().intersects(deployable->getPosition()))
 					{
 						enemy->cancelMovement();

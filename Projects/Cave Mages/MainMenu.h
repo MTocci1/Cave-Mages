@@ -8,10 +8,10 @@ class MainMenu
 private:
 	Font m_Font;
 	Text m_PlayText;
-	bool m_hoveringPlay;
+	bool m_hoveringPlay = false;
 
 	Text m_ExitText;
-	bool m_hoveringExit;
+	bool m_hoveringExit = false;
 
 	Sprite m_Logo;
 

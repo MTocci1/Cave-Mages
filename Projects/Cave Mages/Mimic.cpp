@@ -8,7 +8,7 @@ Mimic::Mimic()
 	// Associate a texture with the sprite
 	m_Sprite = Sprite(TextureHolder::GetTexture(
 		"graphics/mimic.png"));
-	m_Sprite.setScale(.35, .35);
+	m_Sprite.setScale(.25, .25);
 
 	// Load the font
 	m_Font.loadFromFile("fonts/impact.ttf");
@@ -277,4 +277,27 @@ Vector2f Mimic::getCenter()
 		m_Position.x + m_Sprite.getGlobalBounds().width / 2,
 		m_Position.y + m_Sprite.getGlobalBounds().height / 2
 	);
+}
+
+void Mimic::setFacingDirection(bool isAimingRight)
+{
+	if (isAimingRight)
+	{
+		m_facingRight = true;
+		m_facingLeft = false;
+
+		m_Sprite.setScale(.25, .25);
+
+		m_Sprite.setOrigin(0, 0);
+
+
+	}
+	else {
+		m_facingRight = false;
+		m_facingLeft = true;
+
+		m_Sprite.setScale(-.25, .25);
+
+		m_Sprite.setOrigin(m_Sprite.getLocalBounds().width, 0);
+	}
 }

@@ -8,21 +8,19 @@ MainMenu::MainMenu()
 	resolution.y = VideoMode::getDesktopMode().height;
 
 	// Load the font
-	m_Font.loadFromFile("fonts/impact.ttf");
+	m_Font.loadFromFile("fonts/Crang.ttf");
 
 	// Play Text
 	m_PlayText.setFont(m_Font);
-	m_PlayText.setCharacterSize(125);
+	m_PlayText.setCharacterSize(100);
 	m_PlayText.setFillColor(Color::White);
-	m_PlayText.setPosition(50, 50);
 	m_PlayText.setString("Play");
 	m_PlayText.setLetterSpacing(1.5);
 
 	// Exit Text
 	m_ExitText.setFont(m_Font);
-	m_ExitText.setCharacterSize(125);
+	m_ExitText.setCharacterSize(100);
 	m_ExitText.setFillColor(Color::White);
-	m_ExitText.setPosition(50, 100);
 	m_ExitText.setString("Exit");
 	m_ExitText.setLetterSpacing(1.5);
 
@@ -30,21 +28,20 @@ MainMenu::MainMenu()
 	// Associate a texture with the sprite
 	m_Logo = Sprite(TextureHolder::GetTexture(
 		"graphics/logo.png"));
-	m_Logo.setScale(.40, .40);
-	m_Logo.setPosition(100, resolution.y - 200);
+	m_Logo.setScale(.8, .8);
 
 
 	// Center the Main Menu items
 	float playTextX = (resolution.x / 2) - (m_PlayText.getGlobalBounds().width / 2);
-	float playTextY = (resolution.y / 2) - (m_PlayText.getGlobalBounds().height / 2) - 100;
+	float playTextY = (resolution.y / 2) - (m_PlayText.getGlobalBounds().height / 2) - 40;
 	m_PlayText.setPosition(playTextX, playTextY);
 
 	float ExitTextX = (resolution.x / 2) - (m_ExitText.getGlobalBounds().width / 2);
-	float ExitTextY = (resolution.y / 2) - (m_ExitText.getGlobalBounds().height / 2) + 100;
+	float ExitTextY = (resolution.y / 2) - (m_ExitText.getGlobalBounds().height / 2) + 140;
 	m_ExitText.setPosition(ExitTextX, ExitTextY);
 
 	float logoX = (resolution.x / 2) - (m_Logo.getGlobalBounds().width / 2);
-	float logoY = 100;
+	float logoY = 20;
 	m_Logo.setPosition(logoX, logoY);
 
 }

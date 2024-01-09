@@ -4,22 +4,6 @@
 void Engine::input()
 {
 	Event event;
-	while (m_Window.pollEvent(event))
-	{
-		if (event.type == Event::KeyPressed)
-		{
-			// Handle the player quitting
-			if (Keyboard::isKeyPressed(Keyboard::Escape))
-			{
-				m_Window.close();
-			}
-			// Handle the player starting the game
-			if (Keyboard::isKeyPressed(Keyboard::Return))
-			{
-				m_Playing = true;
-			}
-		}
-	}
 
 	if (m_inMainMenu)
 	{
@@ -60,18 +44,32 @@ void Engine::input()
 				// to the shoot function
 				// the number of bullets shot is equal to the multishot level
 				Bullet* bullet = new FireBullet();
-				bullet->shoot(
-					m_fireMage.getCenter().x + 30, m_fireMage.getCenter().y - 50,
-					mouseWorldPosition.x, mouseWorldPosition.y, 1);
+				if (m_fireMage.getFacingDirection()) {
+					bullet->shoot(
+						m_fireMage.getCenter().x - 30, m_fireMage.getCenter().y - 50,
+						mouseWorldPosition.x, mouseWorldPosition.y, 1);
+				}
+				else {
+					bullet->shoot(
+						m_fireMage.getCenter().x + 30, m_fireMage.getCenter().y - 50,
+						mouseWorldPosition.x, mouseWorldPosition.y, 1);
+				}
 				m_lastShot = m_GameTimeTotal;
 				bullets.push_back(bullet);
 
 				if (m_Mimic.getIsAlive())
 				{
 					Bullet* mimicBullet = new MimicBullet();
-					mimicBullet->shoot(
-						m_Mimic.getCenter().x + 30, m_Mimic.getCenter().y - 50,
-						m_fireMage.getCenter().x, m_fireMage.getCenter().y, 1);
+					if (m_fireMage.getFacingDirection()) {
+						mimicBullet->shoot(
+							m_Mimic.getCenter().x - 30, m_Mimic.getCenter().y - 50,
+							m_fireMage.getCenter().x, m_fireMage.getCenter().y, 1);
+					}
+					else {
+						mimicBullet->shoot(
+							m_Mimic.getCenter().x + 30, m_Mimic.getCenter().y - 50,
+							m_fireMage.getCenter().x, m_fireMage.getCenter().y, 1);
+					}
 					mimicBullets.push_back(mimicBullet);
 				}
 			}
@@ -91,6 +89,94 @@ void Engine::input()
 			}
 		}
 
+		while (m_Window.pollEvent(event))
+		{
+			if (event.type == Event::KeyPressed)
+			{
+				// Handle the player quitting
+				if (Keyboard::isKeyPressed(Keyboard::Escape))
+				{
+					m_Window.close();
+				}
+			}
+		}
+		
+		// Player wants to use deployable
+		for (const auto& obstacle : obstacles) {
+			if (auto* deployable = dynamic_cast<DeployableStation*>(obstacle)) {
+				if (deployable->getIsPlayerInRange()) {
+					if (Keyboard::isKeyPressed(Keyboard::F)) {
+						m_currentDeployableStation = deployable;
+						m_deployPosition = Vector2f(deployable->getPosition().left, deployable->getPosition().top);
+						m_Playing = false;
+						m_PickingDeployable = true;
+					}
+				}
+			}
+		}
+
 		m_fireMage.handleInput();
+	}
+	
+
+	if (m_PickingDeployable) {
+		// Player clicks play
+		// 
+		// bool hoveringPlay = false;
+		if (spriteCrosshair.getGlobalBounds().intersects(m_DeployMenu.getTurretIcon().getGlobalBounds()))
+		{
+			// hoveringPlay = true;
+			if (Mouse::isButtonPressed(Mouse::Left) && (m_fireMage.getXP() > turretCost))
+			{
+				m_currentDeployableStation->despawn();
+				Deployable* turret = new FireTurret(m_deployPosition);
+				deployables.push_back(turret);
+
+				// remove xp from player
+				m_fireMage.spentXP(turretCost);
+
+				m_deployableStationsToSpawn -= 1;
+
+				m_Playing = true;
+				m_PickingDeployable = false;
+			}
+		}
+		//m_MainMenu.setHoveringPlay(hoveringPlay);
+
+		// Player clicks exit
+		// 
+		//bool hoveringExit = false;
+		if (spriteCrosshair.getGlobalBounds().intersects(m_DeployMenu.getTreeIcon().getGlobalBounds()))
+		{
+			// hoveringExit = true;
+			if (Mouse::isButtonPressed(Mouse::Left) && (m_fireMage.getXP() > treeCost))
+			{
+				m_currentDeployableStation->despawn();
+				Deployable* tree = new LifeTree(m_deployPosition);
+				deployables.push_back(tree);
+
+				//remove xp from player
+				m_fireMage.spentXP(treeCost);
+
+				m_deployableStationsToSpawn -= 1;
+
+				m_Playing = true;
+				m_PickingDeployable = false;
+			}
+		}
+		//m_MainMenu.setHoveringExit(hoveringExit);
+
+		while (m_Window.pollEvent(event))
+		{
+			if (event.type == Event::KeyPressed)
+			{
+				// Handle the player quitting
+				if (Keyboard::isKeyPressed(Keyboard::Escape))
+				{
+					m_Playing = true;
+					m_PickingDeployable = false;
+				}
+			}
+		}
 	}
 }

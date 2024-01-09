@@ -172,6 +172,7 @@ void Scorpion::update(float elapsedTime, bool playerFacingDirection, Vector2f pl
 				else {
 					m_Position.x = m_Position.x + m_ChargeSpeed * elapsedTime;
 				}
+				setFacingDirection(false);
 			}
 
 			if ((playerX > m_Position.x) || (playerX < m_Position.x)) {
@@ -194,6 +195,7 @@ void Scorpion::update(float elapsedTime, bool playerFacingDirection, Vector2f pl
 				else {
 					m_Position.x = m_Position.x - m_ChargeSpeed * elapsedTime;
 				}
+				setFacingDirection(true);
 			}
 
 			if ((playerX > m_Position.x) || (playerX < m_Position.x)) {
@@ -223,6 +225,8 @@ void Scorpion::update(float elapsedTime, bool playerFacingDirection, Vector2f pl
 				else {
 					m_Position.x = m_Position.x - m_FleeSpeed * elapsedTime;
 				}
+
+				setFacingDirection(true);
 			}
 
 			if ((playerX > m_Position.x) || (playerX < m_Position.x)) {
@@ -245,6 +249,8 @@ void Scorpion::update(float elapsedTime, bool playerFacingDirection, Vector2f pl
 				else {
 					m_Position.x = m_Position.x + m_FleeSpeed * elapsedTime;
 				}
+
+				setFacingDirection(false);
 			}
 
 			if ((playerX > m_Position.x) || (playerX < m_Position.x)) {
@@ -315,4 +321,27 @@ void Scorpion::update(float elapsedTime, bool playerFacingDirection, Vector2f pl
 
 void Scorpion::activateFlee() {
 	m_isFleeing = true;
+}
+
+void Scorpion::setFacingDirection(bool isAimingRight)
+{
+	if (isAimingRight)
+	{
+		m_facingRight = true;
+		m_facingLeft = false;
+
+		m_Sprite.setScale(.25, .25);
+
+		m_Sprite.setOrigin(0, 0);
+
+
+	}
+	else {
+		m_facingRight = false;
+		m_facingLeft = true;
+
+		m_Sprite.setScale(-.25, .25);
+
+		m_Sprite.setOrigin(m_Sprite.getLocalBounds().width, 0);
+	}
 }

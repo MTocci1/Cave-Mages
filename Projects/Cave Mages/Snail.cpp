@@ -74,6 +74,8 @@ void Snail::update(float elapsedTime, bool playerFacingDirection, Vector2f playe
 			else {
 				m_Position.x = m_Position.x + m_Speed * elapsedTime;
 			}
+
+			setFacingDirection(false);
 		}
 
 		if ((playerX > m_Position.x) || (playerX < m_Position.x)) {
@@ -96,6 +98,8 @@ void Snail::update(float elapsedTime, bool playerFacingDirection, Vector2f playe
 			else {
 				m_Position.x = m_Position.x - m_Speed * elapsedTime;
 			}
+
+			setFacingDirection(true);
 		}
 
 		if ((playerX > m_Position.x) || (playerX < m_Position.x)) {
@@ -161,4 +165,32 @@ void Snail::cancelMovement() {
 void Snail::setIsOnWater(bool isSpiderOnWater)
 {
 	m_isOnWater = isSpiderOnWater;
+}
+
+bool Snail::getFacingDirection()
+{
+	return m_facingLeft;
+}
+
+void Snail::setFacingDirection(bool isAimingRight)
+{
+	if (isAimingRight)
+	{
+		m_facingRight = true;
+		m_facingLeft = false;
+
+		m_Sprite.setScale(.10, .10);
+
+		m_Sprite.setOrigin(0, 0);
+
+
+	}
+	else {
+		m_facingRight = false;
+		m_facingLeft = true;
+
+		m_Sprite.setScale(-.10, .10);
+
+		m_Sprite.setOrigin(m_Sprite.getLocalBounds().width, 0);
+	}
 }

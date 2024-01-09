@@ -135,6 +135,7 @@
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Deployable.cpp" />
     <ClCompile Include="DeployableStation.cpp" />
+    <ClCompile Include="DeployMenu.cpp" />
     <ClCompile Include="Draw.cpp" />
     <ClCompile Include="Dummy.cpp" />
     <ClCompile Include="Enemy.cpp" />
@@ -179,6 +180,7 @@
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Deployable.h" />
     <ClInclude Include="DeployableStation.h" />
+    <ClInclude Include="DeployMenu.h" />
     <ClInclude Include="Dummy.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Engine.h" />

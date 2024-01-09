@@ -167,6 +167,7 @@ void Spider::update(float elapsedTime, bool playerFacingDirection, Vector2f play
 				else {
 					m_Position.x = m_Position.x + m_ChargeSpeed * elapsedTime;
 				}
+				setFacingDirection(false);
 			}
 
 			if ((playerX > m_Position.x) || (playerX < m_Position.x)) {
@@ -189,6 +190,7 @@ void Spider::update(float elapsedTime, bool playerFacingDirection, Vector2f play
 				else {
 					m_Position.x = m_Position.x - m_ChargeSpeed * elapsedTime;
 				}
+				setFacingDirection(true);
 			}
 
 			if ((playerX > m_Position.x) || (playerX < m_Position.x)) {
@@ -244,5 +246,28 @@ void Spider::update(float elapsedTime, bool playerFacingDirection, Vector2f play
 	{
 		m_TotalDamage = 0;
 		m_DamageText.setString("");
+	}
+}
+
+void Spider::setFacingDirection(bool isAimingRight)
+{
+	if (isAimingRight)
+	{
+		m_facingRight = true;
+		m_facingLeft = false;
+
+		m_Sprite.setScale(.15, .15);
+
+		m_Sprite.setOrigin(0, 0);
+
+
+	}
+	else {
+		m_facingRight = false;
+		m_facingLeft = true;
+
+		m_Sprite.setScale(-.15, .15);
+
+		m_Sprite.setOrigin(m_Sprite.getLocalBounds().width, 0);
 	}
 }

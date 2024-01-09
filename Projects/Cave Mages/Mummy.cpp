@@ -159,6 +159,7 @@ void Mummy::update(float elapsedTime, bool playerFacingDirection, Vector2f playe
 			if (playerX > m_Position.x)
 			{
 				m_Position.x = m_Position.x + m_ChargeSpeed * elapsedTime;
+				setFacingDirection(true);
 			}
 
 			if ((playerX > m_Position.x) || (playerX < m_Position.x)) {
@@ -171,6 +172,7 @@ void Mummy::update(float elapsedTime, bool playerFacingDirection, Vector2f playe
 			if (playerX < m_Position.x)
 			{
 				m_Position.x = m_Position.x - m_ChargeSpeed * elapsedTime;
+				setFacingDirection(false);
 			}
 
 			if ((playerX > m_Position.x) || (playerX < m_Position.x)) {
@@ -182,7 +184,17 @@ void Mummy::update(float elapsedTime, bool playerFacingDirection, Vector2f playe
 		}
 		else if (m_isIdle) 
 		{
+			float playerX = playerPosition.x;
 
+			// Face the Player
+			if (playerX > m_Position.x)
+			{
+				setFacingDirection(true);
+			}
+			if (playerX < m_Position.x)
+			{
+				setFacingDirection(false);
+			}
 		}
 
 		// Keep the enemy in the arena
@@ -266,5 +278,28 @@ void Mummy::IsOnWater(bool isOnWater, int &enemiesLeft)
 	if (isOnWater)
 	{
 		hit(100, enemiesLeft);
+	}
+}
+
+void Mummy::setFacingDirection(bool isAimingRight)
+{
+	if (isAimingRight)
+	{
+		m_facingRight = true;
+		m_facingLeft = false;
+
+		m_Sprite.setScale(.4, .4);
+
+		m_Sprite.setOrigin(0, 0);
+
+
+	}
+	else {
+		m_facingRight = false;
+		m_facingLeft = true;
+
+		m_Sprite.setScale(-.4, .4);
+
+		m_Sprite.setOrigin(m_Sprite.getLocalBounds().width, 0);
 	}
 }

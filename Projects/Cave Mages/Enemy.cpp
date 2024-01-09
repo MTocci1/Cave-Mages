@@ -139,3 +139,8 @@ void Enemy::setIsOnWater(bool isSpiderOnWater)
 {
 	m_isOnWater = isSpiderOnWater;
 }
+
+bool Enemy::getFacingDirection()
+{
+	return m_facingLeft;
+}

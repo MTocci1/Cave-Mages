@@ -45,6 +45,10 @@ protected:
 
 	float m_SpeedOnWater;
 
+	// Keep Track of where the enemy is facing
+	bool m_facingLeft;
+	bool m_facingRight;
+
 private:
 	// And a texture
 	Texture m_Texture;
@@ -85,4 +89,8 @@ public:
 	bool getIsAlive();
 
 	void setIsOnWater(bool isSpiderOnWater);
+
+	virtual void setFacingDirection(bool isAimingRight) = 0;
+
+	bool getFacingDirection();
 };// End of the class

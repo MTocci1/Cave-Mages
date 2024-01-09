@@ -93,6 +93,7 @@ void Slime::update(float elapsedTime, bool playerFacingDirection, Vector2f playe
 			else {
 				m_Position.x = m_Position.x + m_Speed * elapsedTime;
 			}
+			setFacingDirection(false);
 		}
 
 		if ((playerX > m_Position.x) || (playerX < m_Position.x)) {
@@ -121,6 +122,7 @@ void Slime::update(float elapsedTime, bool playerFacingDirection, Vector2f playe
 			else {
 				m_Position.x = m_Position.x - m_Speed * elapsedTime;
 			}
+			setFacingDirection(true);
 		}
 
 		if ((playerX > m_Position.x) || (playerX < m_Position.x)) {
@@ -138,7 +140,6 @@ void Slime::update(float elapsedTime, bool playerFacingDirection, Vector2f playe
 			}
 		}
 
-		m_Sprite.setScale(.25 + (.05 * m_Level), .25 + (.05 * m_Level));
 		m_Damage = 5 + (5 * m_Level);
 		m_Speed = 100 - (5 * m_Level);
 
@@ -188,4 +189,27 @@ void Slime::update(float elapsedTime, bool playerFacingDirection, Vector2f playe
 void Slime::setIsOnRock(bool isOnRock)
 {
 	m_isOnRock = isOnRock;
+}
+
+void Slime::setFacingDirection(bool isAimingRight)
+{
+	if (isAimingRight)
+	{
+		m_facingRight = true;
+		m_facingLeft = false;
+
+		m_Sprite.setScale(.25 + (.05 * m_Level), .25 + (.05 * m_Level));
+
+		m_Sprite.setOrigin(0, 0);
+
+
+	}
+	else {
+		m_facingRight = false;
+		m_facingLeft = true;
+
+		m_Sprite.setScale(-(.25 + (.05 * m_Level)), .25 + (.05 * m_Level));
+
+		m_Sprite.setOrigin(m_Sprite.getLocalBounds().width, 0);
+	}
 }

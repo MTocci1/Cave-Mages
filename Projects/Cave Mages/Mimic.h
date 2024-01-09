@@ -32,6 +32,8 @@ public:
 	// Check if the player is in enemy range
 	void virtual isPlayerInRange(Vector2f playerPosition);
 
+	void setFacingDirection(bool isAimingRight);
+
 	Vector2f getCenter();
 
 	void setup(float playerFireRate, int playerSpeed, int playerDamage, float playerAbilityCooldown, float playerAbilityActiveTime, 

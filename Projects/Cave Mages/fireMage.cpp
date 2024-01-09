@@ -6,7 +6,7 @@ FireMage::FireMage()
 	// Associate a texture with the sprite
 	m_Sprite = Sprite(TextureHolder::GetTexture(
 		"graphics/fire-mage.png"));
-	m_Sprite.setScale(.35, .35);
+	m_Sprite.setScale(.25, .25);
 
 	// Player Stats
 	// How fast is the character
@@ -131,13 +131,11 @@ void FireMage::handleInput()
 	if (m_isPoisoned) {
 		m_Sprite = Sprite(TextureHolder::GetTexture(
 			"graphics/fire-mage-poisoned.png"));
-		m_Sprite.setScale(.35, .35);
 		m_Sprite.setPosition(m_Position);
 	}
 	else {
 		m_Sprite = Sprite(TextureHolder::GetTexture(
 			"graphics/fire-mage.png"));
-		m_Sprite.setScale(.35, .35);
 		m_Sprite.setPosition(m_Position);
 	}
 }
