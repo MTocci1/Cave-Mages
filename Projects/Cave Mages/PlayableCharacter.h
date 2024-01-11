@@ -26,6 +26,8 @@ protected:
 	// How fast is the character
 	float m_Speed;
 	float m_SpeedOnWater;
+	float m_dashSpeed;
+	float m_dashSpeedOnWater;
 
 	int m_Health;
 	int m_MaxHealth;
@@ -37,9 +39,10 @@ protected:
 	int m_Damage;
 
 	// Dash variables
+	bool m_isDashing;
+	float m_dashDuration;
 	bool m_canDash;
 	float m_dashCooldown;
-	int m_dashDistance;
 
 	// Ability variables
 	float m_abilityCooldown;

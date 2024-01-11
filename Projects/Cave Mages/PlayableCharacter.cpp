@@ -24,6 +24,7 @@ void PlayableCharacter::spawn(IntRect arena, Vector2f resolution, int tileSize)
 void PlayableCharacter::update(float elapsedTime)
 {
 	m_SpeedOnWater = m_Speed / 2;
+	m_dashSpeedOnWater = m_dashSpeed / 2;
 
 	// Ensure health and shield stay within range
 	if (m_Health > m_MaxHealth) {
@@ -43,7 +44,15 @@ void PlayableCharacter::update(float elapsedTime)
 	if (m_LeftPressed)
 	{
 		if (m_isOnWater) {
-			m_Position.x -= m_SpeedOnWater * elapsedTime * factor;
+			if (m_isDashing) {
+				m_Position.x -= m_dashSpeedOnWater * elapsedTime * factor;
+			}
+			else {
+				m_Position.x -= m_SpeedOnWater * elapsedTime * factor;
+			}
+		}
+		else if (m_isDashing) {
+			m_Position.x -= m_dashSpeed * elapsedTime * factor;
 		}
 		else {
 			m_Position.x -= m_Speed * elapsedTime * factor;
@@ -52,7 +61,15 @@ void PlayableCharacter::update(float elapsedTime)
 	if (m_RightPressed)
 	{
 		if (m_isOnWater) {
-			m_Position.x += m_SpeedOnWater * elapsedTime * factor;
+			if (m_isDashing) {
+				m_Position.x += m_dashSpeedOnWater * elapsedTime * factor;
+			}
+			else {
+				m_Position.x += m_SpeedOnWater * elapsedTime * factor;
+			}
+		}
+		else if (m_isDashing) {
+			m_Position.x += m_dashSpeed * elapsedTime * factor;
 		}
 		else {
 			m_Position.x += m_Speed * elapsedTime * factor;
@@ -61,7 +78,15 @@ void PlayableCharacter::update(float elapsedTime)
 	if (m_DownPressed)
 	{
 		if (m_isOnWater) {
-			m_Position.y += m_SpeedOnWater * elapsedTime * factor;
+			if (m_isDashing) {
+				m_Position.y += m_dashSpeedOnWater * elapsedTime * factor;
+			}
+			else {
+				m_Position.y += m_SpeedOnWater * elapsedTime * factor;
+			}
+		}
+		else if (m_isDashing) {
+			m_Position.y += m_dashSpeed * elapsedTime * factor;
 		}
 		else {
 			m_Position.y += m_Speed * elapsedTime * factor;
@@ -70,7 +95,15 @@ void PlayableCharacter::update(float elapsedTime)
 	if (m_UpPressed)
 	{
 		if (m_isOnWater) {
-			m_Position.y -= m_SpeedOnWater * elapsedTime * factor;
+			if (m_isDashing) {
+				m_Position.y -= m_dashSpeedOnWater * elapsedTime * factor;
+			}
+			else {
+				m_Position.y -= m_SpeedOnWater * elapsedTime * factor;
+			}
+		}
+		else if (m_isDashing) {
+			m_Position.y -= m_dashSpeed * elapsedTime * factor;
 		}
 		else {
 			m_Position.y -= m_Speed * elapsedTime * factor;
@@ -101,6 +134,16 @@ void PlayableCharacter::update(float elapsedTime)
 	m_Sprite.setPosition(m_Position);
 
 	// Dash
+	if (m_isDashing) 
+	{
+		m_dashDuration -= elapsedTime;
+	}
+	if (m_dashDuration < 0.0)
+	{
+		m_dashDuration = 0.2;
+		m_isDashing = false;
+	}
+
 	if (!m_canDash)
 	{
 		m_dashCooldown -= elapsedTime;
@@ -111,6 +154,7 @@ void PlayableCharacter::update(float elapsedTime)
 		m_dashCooldown = 3.0;
 	}
 
+	// Ability
 	if (!m_canUseAbility)
 	{
 		m_RealTimeAbilityCooldown -= elapsedTime;
@@ -143,6 +187,7 @@ void PlayableCharacter::update(float elapsedTime)
 		m_shieldCooldown = 1.0;
 	}
 
+	// Possessed
 	if (m_isPossessed) {
 		m_PossessedActiveTime -= elapsedTime;
 	}
@@ -152,6 +197,7 @@ void PlayableCharacter::update(float elapsedTime)
 		m_PossessedActiveTime = 10.0;
 	}
 
+	// Poisoned
 	if (m_isPoisoned) {
 		m_PoisonActiveTime -= elapsedTime;
 	}
@@ -250,37 +296,7 @@ void PlayableCharacter::dash()
 {
 	if (m_canDash)
 	{
-		float factor = 1.0f;
-		if (m_LeftPressed || m_RightPressed || m_UpPressed || m_DownPressed) {
-			// Normalize the movement vector to ensure consistent speed in all directions
-			factor = 1.0f / sqrt(2.0f);
-		}
-
-		float targetX = m_Position.x;
-		float targetY = m_Position.y;
-
-		if (m_LeftPressed)
-		{
-			targetX -= m_dashDistance * factor;
-		}
-		if (m_RightPressed)
-		{
-			targetX += m_dashDistance * factor;
-		}
-		if (m_DownPressed)
-		{
-			targetY += m_dashDistance * factor;
-		}
-		if (m_UpPressed)
-		{
-			targetY -= m_dashDistance * factor;
-		}
-
-		// Perform smooth transition using linear interpolation
-		float lerpFactor = 0.01f;  // Adjust the value for desired smoothness
-		m_Position.x = lerp(m_Position.x, targetX, lerpFactor);
-		m_Position.y = lerp(m_Position.y, targetY, lerpFactor);
-
+		m_isDashing = true;
 		m_canDash = false;
 	}
 }

@@ -12,6 +12,8 @@ FireMage::FireMage()
 	// How fast is the character
 	m_Speed = 700;
 	m_SpeedOnWater = m_Speed / 2;
+	m_dashSpeed = 1700;
+	m_dashSpeedOnWater = m_dashSpeed / 2;
 
 	m_Health = 100;
 	m_MaxHealth = 100;
@@ -21,9 +23,10 @@ FireMage::FireMage()
 	m_FireRate = 1.0;
 	m_Damage = 20;
 
+	m_isDashing = false;
+	m_dashDuration = 0.2f;
 	m_canDash = true;
 	m_dashCooldown = 3.0;
-	m_dashDistance = 13000;
 
 	m_abilityCooldown = 9.0f;
 	m_abilityActiveTime = 3.0f;

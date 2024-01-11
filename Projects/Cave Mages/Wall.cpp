@@ -4,9 +4,27 @@
 
 Wall::Wall() 
 {
-	// Associate a texture with the sprite
-	m_Sprite = Sprite(TextureHolder::GetTexture(
-		"graphics/rock.png"));
+	// Make a rock
+	// Use randomizer to choose the sprite
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_int_distribution<int> distrib(1, 3);
+
+	int randomRock = distrib(gen);
+
+	if (randomRock == 1) {
+		// Associate a texture with the sprite
+		m_Sprite = Sprite(TextureHolder::GetTexture(
+			"graphics/rock-1.png"));
+	}
+	else if (randomRock == 2) {
+		m_Sprite = Sprite(TextureHolder::GetTexture(
+			"graphics/rock-2.png"));
+	}
+	else {
+		m_Sprite = Sprite(TextureHolder::GetTexture(
+			"graphics/rock-3.png"));
+	}
 }
 
 void Wall::spawn(IntRect arena, Vector2f resolution, int tileSize)

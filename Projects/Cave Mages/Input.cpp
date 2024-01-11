@@ -118,14 +118,13 @@ void Engine::input()
 		m_fireMage.handleInput();
 	}
 	
-
+	// Player picking deployable
 	if (m_PickingDeployable) {
-		// Player clicks play
-		// 
-		// bool hoveringPlay = false;
+		// Player clicks turret
+		bool hoveringTurretIcon = false;
 		if (spriteCrosshair.getGlobalBounds().intersects(m_DeployMenu.getTurretIcon().getGlobalBounds()))
 		{
-			// hoveringPlay = true;
+			hoveringTurretIcon = true;
 			if (Mouse::isButtonPressed(Mouse::Left) && (m_fireMage.getXP() > turretCost))
 			{
 				m_currentDeployableStation->despawn();
@@ -141,14 +140,13 @@ void Engine::input()
 				m_PickingDeployable = false;
 			}
 		}
-		//m_MainMenu.setHoveringPlay(hoveringPlay);
+		m_DeployMenu.setHoveringTurretIcon(hoveringTurretIcon);
 
-		// Player clicks exit
-		// 
-		//bool hoveringExit = false;
+		// Player clicks tree
+		bool hoveringTreeIcon = false;
 		if (spriteCrosshair.getGlobalBounds().intersects(m_DeployMenu.getTreeIcon().getGlobalBounds()))
 		{
-			// hoveringExit = true;
+			hoveringTreeIcon = true;
 			if (Mouse::isButtonPressed(Mouse::Left) && (m_fireMage.getXP() > treeCost))
 			{
 				m_currentDeployableStation->despawn();
@@ -164,7 +162,7 @@ void Engine::input()
 				m_PickingDeployable = false;
 			}
 		}
-		//m_MainMenu.setHoveringExit(hoveringExit);
+		m_DeployMenu.setHoveringTreeIcon(hoveringTreeIcon);
 
 		while (m_Window.pollEvent(event))
 		{

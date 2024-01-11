@@ -115,9 +115,9 @@ void DeployMenu::update(int turretUpgradeCost, int treeUpgradeCost)
 
 	if (m_hoveringTurretIcon) {
 		m_TurretIcon = Sprite(TextureHolder::GetTexture(
-			"graphics/fire-turret-icon.png"));
+			"graphics/selected-fire-turret-icon.png"));
 		m_TurretIcon.setScale(.8, .8);
-		float TurretIconX = (resolution.x / 2) - (m_TurretIcon.getGlobalBounds().width / 2) - 300;
+		float TurretIconX = (resolution.x / 2) - (m_TurretIcon.getGlobalBounds().width / 2) - 350;
 		float TurretIconY = (resolution.y / 2) - (m_TurretIcon.getGlobalBounds().height / 2);
 		m_TurretIcon.setPosition(TurretIconX, TurretIconY);
 	}
@@ -125,16 +125,16 @@ void DeployMenu::update(int turretUpgradeCost, int treeUpgradeCost)
 		m_TurretIcon = Sprite(TextureHolder::GetTexture(
 			"graphics/fire-turret-icon.png"));
 		m_TurretIcon.setScale(.8, .8);
-		float TurretIconX = (resolution.x / 2) - (m_TurretIcon.getGlobalBounds().width / 2) - 300;
+		float TurretIconX = (resolution.x / 2) - (m_TurretIcon.getGlobalBounds().width / 2) - 350;
 		float TurretIconY = (resolution.y / 2) - (m_TurretIcon.getGlobalBounds().height / 2);
 		m_TurretIcon.setPosition(TurretIconX, TurretIconY);
 	}
 
 	if (m_hoveringTreeIcon) {
 		m_TreeIcon = Sprite(TextureHolder::GetTexture(
-			"graphics/tree-of-life-icon.png"));
+			"graphics/selected-tree-of-life-icon.png"));
 		m_TreeIcon.setScale(.8, .8);
-		float TreeIconX = (resolution.x / 2) - (m_TreeIcon.getGlobalBounds().width / 2) + 300;
+		float TreeIconX = (resolution.x / 2) - (m_TreeIcon.getGlobalBounds().width / 2) + 350;
 		float TreeIconY = (resolution.y / 2) - (m_TreeIcon.getGlobalBounds().height / 2);
 		m_TreeIcon.setPosition(TreeIconX, TreeIconY);
 	}
@@ -142,7 +142,7 @@ void DeployMenu::update(int turretUpgradeCost, int treeUpgradeCost)
 		m_TreeIcon = Sprite(TextureHolder::GetTexture(
 			"graphics/tree-of-life-icon.png"));
 		m_TreeIcon.setScale(.8, .8);
-		float TreeIconX = (resolution.x / 2) - (m_TreeIcon.getGlobalBounds().width / 2) + 300;
+		float TreeIconX = (resolution.x / 2) - (m_TreeIcon.getGlobalBounds().width / 2) + 350;
 		float TreeIconY = (resolution.y / 2) - (m_TreeIcon.getGlobalBounds().height / 2);
 		m_TreeIcon.setPosition(TreeIconX, TreeIconY);
 	}
