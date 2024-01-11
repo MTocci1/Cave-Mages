@@ -41,72 +41,80 @@ void PlayableCharacter::update(float elapsedTime)
 	}
 
 	// Move the player
-	if (m_LeftPressed)
-	{
-		if (m_isOnWater) {
-			if (m_isDashing) {
-				m_Position.x -= m_dashSpeedOnWater * elapsedTime * factor;
+	if (m_canMoveLeft) {
+		if (m_LeftPressed)
+		{
+			if (m_isOnWater) {
+				if (m_isDashing) {
+					m_Position.x -= m_dashSpeedOnWater * elapsedTime * factor;
+				}
+				else {
+					m_Position.x -= m_SpeedOnWater * elapsedTime * factor;
+				}
+			}
+			else if (m_isDashing) {
+				m_Position.x -= m_dashSpeed * elapsedTime * factor;
 			}
 			else {
-				m_Position.x -= m_SpeedOnWater * elapsedTime * factor;
+				m_Position.x -= m_Speed * elapsedTime * factor;
 			}
-		}
-		else if (m_isDashing) {
-			m_Position.x -= m_dashSpeed * elapsedTime * factor;
-		}
-		else {
-			m_Position.x -= m_Speed * elapsedTime * factor;
 		}
 	}
-	if (m_RightPressed)
-	{
-		if (m_isOnWater) {
-			if (m_isDashing) {
-				m_Position.x += m_dashSpeedOnWater * elapsedTime * factor;
+	if (m_canMoveRight) {
+		if (m_RightPressed)
+		{
+			if (m_isOnWater) {
+				if (m_isDashing) {
+					m_Position.x += m_dashSpeedOnWater * elapsedTime * factor;
+				}
+				else {
+					m_Position.x += m_SpeedOnWater * elapsedTime * factor;
+				}
+			}
+			else if (m_isDashing) {
+				m_Position.x += m_dashSpeed * elapsedTime * factor;
 			}
 			else {
-				m_Position.x += m_SpeedOnWater * elapsedTime * factor;
+				m_Position.x += m_Speed * elapsedTime * factor;
 			}
-		}
-		else if (m_isDashing) {
-			m_Position.x += m_dashSpeed * elapsedTime * factor;
-		}
-		else {
-			m_Position.x += m_Speed * elapsedTime * factor;
 		}
 	}
-	if (m_DownPressed)
-	{
-		if (m_isOnWater) {
-			if (m_isDashing) {
-				m_Position.y += m_dashSpeedOnWater * elapsedTime * factor;
+	if (m_canMoveDown) {
+		if (m_DownPressed)
+		{
+			if (m_isOnWater) {
+				if (m_isDashing) {
+					m_Position.y += m_dashSpeedOnWater * elapsedTime * factor;
+				}
+				else {
+					m_Position.y += m_SpeedOnWater * elapsedTime * factor;
+				}
+			}
+			else if (m_isDashing) {
+				m_Position.y += m_dashSpeed * elapsedTime * factor;
 			}
 			else {
-				m_Position.y += m_SpeedOnWater * elapsedTime * factor;
+				m_Position.y += m_Speed * elapsedTime * factor;
 			}
-		}
-		else if (m_isDashing) {
-			m_Position.y += m_dashSpeed * elapsedTime * factor;
-		}
-		else {
-			m_Position.y += m_Speed * elapsedTime * factor;
 		}
 	}
-	if (m_UpPressed)
-	{
-		if (m_isOnWater) {
-			if (m_isDashing) {
-				m_Position.y -= m_dashSpeedOnWater * elapsedTime * factor;
+	if (m_canMoveUp) {
+		if (m_UpPressed)
+		{
+			if (m_isOnWater) {
+				if (m_isDashing) {
+					m_Position.y -= m_dashSpeedOnWater * elapsedTime * factor;
+				}
+				else {
+					m_Position.y -= m_SpeedOnWater * elapsedTime * factor;
+				}
+			}
+			else if (m_isDashing) {
+				m_Position.y -= m_dashSpeed * elapsedTime * factor;
 			}
 			else {
-				m_Position.y -= m_SpeedOnWater * elapsedTime * factor;
+				m_Position.y -= m_Speed * elapsedTime * factor;
 			}
-		}
-		else if (m_isDashing) {
-			m_Position.y -= m_dashSpeed * elapsedTime * factor;
-		}
-		else {
-			m_Position.y -= m_Speed * elapsedTime * factor;
 		}
 	}
 
@@ -132,6 +140,8 @@ void PlayableCharacter::update(float elapsedTime)
 	Vector2f newPosition = prevPosition + Vector2f(elapsedTime * m_Speed, elapsedTime * m_Speed);
 
 	m_Sprite.setPosition(m_Position);
+
+	updateHitboxes();
 
 	// Dash
 	if (m_isDashing) 
@@ -395,4 +405,75 @@ void PlayableCharacter::setFacingDirection(bool isAimingRight)
 
 		m_Sprite.setOrigin(m_Sprite.getLocalBounds().width, 0);
 	}
+}
+
+void PlayableCharacter::updateHitboxes()
+{
+	float headWidth = m_Sprite.getGlobalBounds().width * 0.5f;
+	float headHeight = m_Sprite.getGlobalBounds().height * 0.2f;
+	float feetWidth = m_Sprite.getGlobalBounds().width * 0.5f;
+	float feetHeight = m_Sprite.getGlobalBounds().height * 0.2f;
+	float sideWidth = m_Sprite.getGlobalBounds().width * 0.2f;
+	float sideHeight = m_Sprite.getGlobalBounds().height * 0.6f;
+
+	// Update hitbox positions based on the player's position
+	m_HeadHitbox.left = m_Position.x + m_Sprite.getGlobalBounds().width / 2 - headWidth / 2;
+	m_HeadHitbox.top = m_Position.y;
+	m_HeadHitbox.width = headWidth;
+	m_HeadHitbox.height = headHeight;
+
+	m_FeetHitbox.left = m_Position.x + m_Sprite.getGlobalBounds().width / 2 - feetWidth / 2;
+	m_FeetHitbox.top = m_Position.y + m_Sprite.getGlobalBounds().height - feetHeight;
+	m_FeetHitbox.width = feetWidth;
+	m_FeetHitbox.height = feetHeight;
+
+	m_LeftHitbox.left = m_Position.x;
+	m_LeftHitbox.top = m_Position.y + m_Sprite.getGlobalBounds().height / 2 - sideHeight / 2;
+	m_LeftHitbox.width = sideWidth;
+	m_LeftHitbox.height = sideHeight;
+
+	m_RightHitbox.left = m_Position.x + m_Sprite.getGlobalBounds().width - sideWidth;
+	m_RightHitbox.top = m_Position.y + m_Sprite.getGlobalBounds().height / 2 - sideHeight / 2;
+	m_RightHitbox.width = sideWidth;
+	m_RightHitbox.height = sideHeight;
+}
+
+FloatRect PlayableCharacter::getHeadHitBox()
+{
+	return m_HeadHitbox;
+}
+
+FloatRect PlayableCharacter::getFeetHitBox()
+{
+	return m_FeetHitbox;
+}
+
+FloatRect PlayableCharacter::getLeftHitBox()
+{
+	return m_LeftHitbox;
+}
+
+FloatRect PlayableCharacter::getRightHitBox()
+{
+	return m_RightHitbox;
+}
+
+void PlayableCharacter::setCanMoveUp(bool canMove)
+{
+	m_canMoveUp = canMove;
+}
+
+void PlayableCharacter::setCanMoveDown(bool canMove)
+{
+	m_canMoveDown = canMove;
+}
+
+void PlayableCharacter::setCanMoveLeft(bool canMove)
+{
+	m_canMoveLeft = canMove;
+}
+
+void PlayableCharacter::setCanMoveRight(bool canMove)
+{
+	m_canMoveRight = canMove;
 }

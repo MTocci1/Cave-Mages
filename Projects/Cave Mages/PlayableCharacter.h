@@ -18,9 +18,21 @@ protected:
 	bool m_UpPressed;
 	bool m_DownPressed;
 
+	// Can the player move in a direction
+	bool m_canMoveLeft;
+	bool m_canMoveRight;
+	bool m_canMoveUp;
+	bool m_canMoveDown;
+
 	// Keep Track of where the player is facing
 	bool m_facingLeft;
 	bool m_facingRight;
+
+	// Keep track of body
+	FloatRect m_HeadHitbox;
+	FloatRect m_FeetHitbox;
+	FloatRect m_LeftHitbox;
+	FloatRect m_RightHitbox;
 
 	// Player Stats
 	// How fast is the character
@@ -157,5 +169,24 @@ public:
 	void startAbilityCooldown();
 
 	void setFacingDirection(bool isAimingRight);
+
+	// Hitboxes
+	void updateHitboxes();
+
+	FloatRect getHeadHitBox();
+
+	FloatRect getFeetHitBox();
+
+	FloatRect getLeftHitBox();
+
+	FloatRect getRightHitBox();
+
+	void setCanMoveUp(bool canMove);
+
+	void setCanMoveDown(bool canMove);
+
+	void setCanMoveLeft(bool canMove);
+
+	void setCanMoveRight(bool canMove);
 
 };// End of the class

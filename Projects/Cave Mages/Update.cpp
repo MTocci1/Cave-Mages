@@ -147,15 +147,130 @@ void Engine::update(float dtAsSeconds)
 		{
 			m_fireMage.cancelMovement();
 		}
-		// Player collide with Rock
+
+		// Player collide with object
+		// Player head collide with Rock
+		bool headHitObject = true;
+		bool feetHitObject = true;
+		bool leftHitObject = true;
+		bool rightHitObject = true;
 		for (const auto& obstacle : obstacles) {
 			if (auto* rock = dynamic_cast<Wall*>(obstacle)) {
-				if (m_fireMage.getPosition().intersects(rock->getPosition()))
+				if (m_fireMage.getHeadHitBox().intersects(rock->getPosition()))
 				{
-					m_fireMage.cancelMovement();
+					headHitObject = false;
 				}
 			}
 		}
+		// Player feet collide with Rock
+		for (const auto& obstacle : obstacles) {
+			if (auto* rock = dynamic_cast<Wall*>(obstacle)) {
+				if (m_fireMage.getFeetHitBox().intersects(rock->getPosition()))
+				{
+					feetHitObject = false;
+				}
+			}
+		}
+		// Player left collide with Rock
+		for (const auto& obstacle : obstacles) {
+			if (auto* rock = dynamic_cast<Wall*>(obstacle)) {
+				if (m_fireMage.getLeftHitBox().intersects(rock->getPosition()))
+				{
+					leftHitObject = false;
+				}
+			}
+		}
+		// Player right collide with Rock
+		for (const auto& obstacle : obstacles) {
+			if (auto* rock = dynamic_cast<Wall*>(obstacle)) {
+				if (m_fireMage.getRightHitBox().intersects(rock->getPosition()))
+				{
+					rightHitObject = false;
+				}
+			}
+		}
+
+		// Player collide with DeployableStation
+		// Player head collide with DeployableStation
+		for (const auto& obstacle : obstacles) {
+			if (auto* deployable = dynamic_cast<DeployableStation*>(obstacle)) {
+				if (deployable->isSpawned()) {
+					if (m_fireMage.getHeadHitBox().intersects(deployable->getPosition()))
+					{
+						headHitObject = false;
+					}
+				}
+			}
+		}
+		// Player feet collide with DeployableStation
+		for (const auto& obstacle : obstacles) {
+			if (auto* deployable = dynamic_cast<DeployableStation*>(obstacle)) {
+				if (deployable->isSpawned()) {
+					if (m_fireMage.getFeetHitBox().intersects(deployable->getPosition()))
+					{
+						feetHitObject = false;
+					}
+				}
+			}
+		}
+		// Player left collide with DeployableStation
+		for (const auto& obstacle : obstacles) {
+			if (auto* deployable = dynamic_cast<DeployableStation*>(obstacle)) {
+				if (deployable->isSpawned()) {
+					if (m_fireMage.getLeftHitBox().intersects(deployable->getPosition()))
+					{
+						leftHitObject = false;
+					}
+				}
+			}
+		}
+		// Player right collide with DeployableStation
+		for (const auto& obstacle : obstacles) {
+			if (auto* deployable = dynamic_cast<DeployableStation*>(obstacle)) {
+				if (deployable->isSpawned()) {
+					if (m_fireMage.getRightHitBox().intersects(deployable->getPosition()))
+					{
+						rightHitObject = false;
+					}
+				}
+			}
+		}
+
+		// Player collide with Deployable
+		// Player head collide with Deployable
+		for (const auto& deployable : deployables) {
+			if (m_fireMage.getHeadHitBox().intersects(deployable->getPosition()))
+			{
+				headHitObject = false;
+			}
+		}
+		// Player feet collide with Deployable
+		for (const auto& deployable : deployables) {
+			if (m_fireMage.getFeetHitBox().intersects(deployable->getPosition()))
+			{
+				feetHitObject = false;
+			}
+		}
+		// Player left collide with Deployable
+		for (const auto& deployable : deployables) {
+			if (m_fireMage.getLeftHitBox().intersects(deployable->getPosition()))
+			{
+				leftHitObject = false;
+			}
+		}
+		// Player right collide with Deployable
+		for (const auto& deployable : deployables) {
+			if (m_fireMage.getRightHitBox().intersects(deployable->getPosition()))
+			{
+				rightHitObject = false;
+			}
+		}
+		m_fireMage.setCanMoveUp(headHitObject);
+		m_fireMage.setCanMoveDown(feetHitObject);
+		m_fireMage.setCanMoveLeft(leftHitObject);
+		m_fireMage.setCanMoveRight(rightHitObject);
+
+
 		// Player collide with Water
 		// Assume initially the player is not on water
 		bool playerOnWater = false;
@@ -170,27 +285,6 @@ void Engine::update(float dtAsSeconds)
 		}
 		// Set the player's water state based on the result of the loop
 		m_fireMage.setIsOnWater(playerOnWater);
-
-		// Player collide with DeployableStation
-		for (const auto& obstacle : obstacles) {
-			if (auto* deployable = dynamic_cast<DeployableStation*>(obstacle)) {
-				if (deployable->getIsSpawned()) {
-					if (m_fireMage.getPosition().intersects(deployable->getPosition())) {
-						m_fireMage.cancelMovement();
-						// Exit the loop once a collision is detected
-						break;
-					}
-				}
-			}
-		}
-		// Player collide with Deployable
-		for (const auto& deployable : deployables) {
-			if (m_fireMage.getPosition().intersects(deployable->getPosition())) {
-				m_fireMage.cancelMovement();
-				// Exit the loop once a collision is detected
-				break;
-			}
-		}
 
 		// Is player in range of Deployable Station?
 		// Player collide with DeployableStation
