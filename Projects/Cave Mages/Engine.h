@@ -183,6 +183,16 @@ private:
 
 	bool isEnemyCloseToTurret(FireTurret& turret, const vector<Enemy*>& enemies);
 
+	void PlayerCollisions(float dtAsSeconds);
+
+	void PlayerAbilityCollisions(float dtAsSeconds);
+
+	void EnemyCollisions(float dtAsSeconds);
+
+	void WaterCollisions(float dtAsSeconds);
+
+	void BulletCollisions(float dtAsSeconds);
+
 public:
 	// The Engine constructor
 	Engine();
