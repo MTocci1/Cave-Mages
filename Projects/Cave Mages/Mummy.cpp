@@ -8,7 +8,7 @@ Mummy::Mummy()
 	// Associate a texture with the sprite
 	m_Sprite = Sprite(TextureHolder::GetTexture(
 		"graphics/mummy.png"));
-	m_Sprite.setScale(.4, .4);
+	m_Sprite.setScale(.35, .35);
 
 	// Load the font
 	m_Font.loadFromFile("fonts/impact.ttf");
@@ -121,6 +121,17 @@ void Mummy::update(float elapsedTime, bool playerFacingDirection, Vector2f playe
 
 		isMummyCloseToPlayer(playerPosition);
 
+		// Count the number of keys pressed
+		int keysPressedCount = 0;
+		if (m_LeftPressed || m_RightPressed) {
+			keysPressedCount++;
+		}
+		if (m_UpPressed || m_DownPressed) {
+			keysPressedCount++;
+		}
+		// Update the factor based on the number of keys pressed
+		float factor = 1.0f / sqrt(keysPressedCount);
+
 		if (!m_isPlayerInRange)
 		{
 			changeDirection();
@@ -134,19 +145,19 @@ void Mummy::update(float elapsedTime, bool playerFacingDirection, Vector2f playe
 			// Move the Mummy
 			if (m_LeftPressed)
 			{
-				m_Position.x -= m_Speed * elapsedTime;
+				m_Position.x -= m_Speed * elapsedTime * factor;
 			}
 			if (m_RightPressed)
 			{
-				m_Position.x += m_Speed * elapsedTime;
+				m_Position.x += m_Speed * elapsedTime * factor;
 			}
 			if (m_DownPressed)
 			{
-				m_Position.y += m_Speed * elapsedTime;
+				m_Position.y += m_Speed * elapsedTime * factor;
 			}
 			if (m_UpPressed)
 			{
-				m_Position.y -= m_Speed * elapsedTime;
+				m_Position.y -= m_Speed * elapsedTime * factor;
 			}
 		}
 		else if (m_isPlayerInRange && !m_isIdle)
@@ -158,27 +169,35 @@ void Mummy::update(float elapsedTime, bool playerFacingDirection, Vector2f playe
 			// Chase the Player
 			if (playerX > m_Position.x)
 			{
-				m_Position.x = m_Position.x + m_ChargeSpeed * elapsedTime;
-				setFacingDirection(true);
+				m_RightPressed = true;
+				m_LeftPressed = false;
+				m_Position.x = m_Position.x + m_ChargeSpeed * elapsedTime * factor;
+				setFacingDirection(false);
 			}
 
 			if ((playerX > m_Position.x) || (playerX < m_Position.x)) {
 				if (playerY > m_Position.y)
 				{
-					m_Position.y = m_Position.y + m_ChargeSpeed * elapsedTime;
+					m_UpPressed = true;
+					m_DownPressed = false;
+					m_Position.y = m_Position.y + m_ChargeSpeed * elapsedTime * factor;
 				}
 			}
 
 			if (playerX < m_Position.x)
 			{
-				m_Position.x = m_Position.x - m_ChargeSpeed * elapsedTime;
-				setFacingDirection(false);
+				m_RightPressed = false;
+				m_LeftPressed = true;
+				m_Position.x = m_Position.x - m_ChargeSpeed * elapsedTime * factor;
+				setFacingDirection(true);
 			}
 
 			if ((playerX > m_Position.x) || (playerX < m_Position.x)) {
 				if (playerY < m_Position.y)
 				{
-					m_Position.y = m_Position.y - m_ChargeSpeed * elapsedTime;
+					m_UpPressed = false;
+					m_DownPressed = true;
+					m_Position.y = m_Position.y - m_ChargeSpeed * elapsedTime * factor;
 				}
 			}
 		}
@@ -288,7 +307,7 @@ void Mummy::setFacingDirection(bool isAimingRight)
 		m_facingRight = true;
 		m_facingLeft = false;
 
-		m_Sprite.setScale(.4, .4);
+		m_Sprite.setScale(.35, .35);
 
 		m_Sprite.setOrigin(0, 0);
 
@@ -298,7 +317,7 @@ void Mummy::setFacingDirection(bool isAimingRight)
 		m_facingRight = false;
 		m_facingLeft = true;
 
-		m_Sprite.setScale(-.4, .4);
+		m_Sprite.setScale(-.35, .35);
 
 		m_Sprite.setOrigin(m_Sprite.getLocalBounds().width, 0);
 	}

@@ -101,6 +101,17 @@ void Spider::update(float elapsedTime, bool playerFacingDirection, Vector2f play
 
 		isPlayerInRange(playerPosition);
 
+		// Count the number of keys pressed
+		int keysPressedCount = 0;
+		if (m_LeftPressed || m_RightPressed) {
+			keysPressedCount++;
+		}
+		if (m_UpPressed || m_DownPressed) {
+			keysPressedCount++;
+		}
+		// Update the factor based on the number of keys pressed
+		float factor = 1.0f / sqrt(keysPressedCount);
+
 		if (!m_isPlayerInRange)
 		{
 			m_SpeedOnWater = m_Speed / 2;
@@ -117,37 +128,37 @@ void Spider::update(float elapsedTime, bool playerFacingDirection, Vector2f play
 			if (m_LeftPressed)
 			{
 				if (m_isOnWater) {
-					m_Position.x -= m_SpeedOnWater * elapsedTime;
+					m_Position.x -= m_SpeedOnWater * elapsedTime * factor;
 				}
 				else {
-					m_Position.x -= m_Speed * elapsedTime;
+					m_Position.x -= m_Speed * elapsedTime * factor;
 				}
 			}
 			if (m_RightPressed)
 			{
 				if (m_isOnWater) {
-					m_Position.x += m_SpeedOnWater * elapsedTime;
+					m_Position.x += m_SpeedOnWater * elapsedTime * factor;
 				}
 				else {
-					m_Position.x += m_Speed * elapsedTime;
+					m_Position.x += m_Speed * elapsedTime * factor;
 				}
 			}
 			if (m_DownPressed)
 			{
 				if (m_isOnWater) {
-					m_Position.y += m_SpeedOnWater * elapsedTime;
+					m_Position.y += m_SpeedOnWater * elapsedTime * factor;
 				}
 				else {
-					m_Position.y += m_Speed * elapsedTime;
+					m_Position.y += m_Speed * elapsedTime * factor;
 				}
 			}
 			if (m_UpPressed)
 			{
 				if (m_isOnWater) {
-					m_Position.y -= m_SpeedOnWater * elapsedTime;
+					m_Position.y -= m_SpeedOnWater * elapsedTime * factor;
 				}
 				else {
-					m_Position.y -= m_Speed * elapsedTime;
+					m_Position.y -= m_Speed * elapsedTime * factor;
 				}
 			}
 		}
@@ -161,11 +172,13 @@ void Spider::update(float elapsedTime, bool playerFacingDirection, Vector2f play
 			// Chase the Player
 			if (playerX > m_Position.x)
 			{
+				m_RightPressed = true;
+				m_LeftPressed = false;
 				if (m_isOnWater) {
-					m_Position.x = m_Position.x + m_ChargeSpeedOnWater * elapsedTime;
+					m_Position.x = m_Position.x + m_ChargeSpeedOnWater * elapsedTime * factor;
 				}
 				else {
-					m_Position.x = m_Position.x + m_ChargeSpeed * elapsedTime;
+					m_Position.x = m_Position.x + m_ChargeSpeed * elapsedTime * factor;
 				}
 				setFacingDirection(false);
 			}
@@ -173,22 +186,26 @@ void Spider::update(float elapsedTime, bool playerFacingDirection, Vector2f play
 			if ((playerX > m_Position.x) || (playerX < m_Position.x)) {
 				if (playerY > m_Position.y)
 				{
+					m_UpPressed = true;
+					m_DownPressed = false;
 					if (m_isOnWater) {
-						m_Position.y = m_Position.y + m_ChargeSpeedOnWater * elapsedTime;
+						m_Position.y = m_Position.y + m_ChargeSpeedOnWater * elapsedTime * factor;
 					}
 					else {
-						m_Position.y = m_Position.y + m_ChargeSpeed * elapsedTime;
+						m_Position.y = m_Position.y + m_ChargeSpeed * elapsedTime * factor;
 					}
 				}
 			}
 
 			if (playerX < m_Position.x)
 			{
+				m_RightPressed = true;
+				m_LeftPressed = false;
 				if (m_isOnWater) {
-					m_Position.x = m_Position.x - m_ChargeSpeedOnWater * elapsedTime;
+					m_Position.x = m_Position.x - m_ChargeSpeedOnWater * elapsedTime * factor;
 				}
 				else {
-					m_Position.x = m_Position.x - m_ChargeSpeed * elapsedTime;
+					m_Position.x = m_Position.x - m_ChargeSpeed * elapsedTime * factor;
 				}
 				setFacingDirection(true);
 			}
@@ -196,11 +213,13 @@ void Spider::update(float elapsedTime, bool playerFacingDirection, Vector2f play
 			if ((playerX > m_Position.x) || (playerX < m_Position.x)) {
 				if (playerY < m_Position.y)
 				{
+					m_UpPressed = false;
+					m_DownPressed = true;
 					if (m_isOnWater) {
-						m_Position.y = m_Position.y - m_ChargeSpeedOnWater * elapsedTime;
+						m_Position.y = m_Position.y - m_ChargeSpeedOnWater * elapsedTime * factor;
 					}
 					else {
-						m_Position.y = m_Position.y - m_ChargeSpeed * elapsedTime;
+						m_Position.y = m_Position.y - m_ChargeSpeed * elapsedTime * factor;
 					}
 				}
 			}

@@ -65,14 +65,27 @@ void Snail::update(float elapsedTime, bool playerFacingDirection, Vector2f playe
 		float playerX = playerPosition.x;
 		float playerY = playerPosition.y;
 
+		// Count the number of keys pressed
+		int keysPressedCount = 0;
+		if (m_LeftPressed || m_RightPressed) {
+			keysPressedCount++;
+		}
+		if (m_UpPressed || m_DownPressed) {
+			keysPressedCount++;
+		}
+		// Update the factor based on the number of keys pressed
+		float factor = 1.0f / sqrt(keysPressedCount);
+
 		// Chase the Player
 		if (playerX > m_Position.x)
 		{
+			m_RightPressed = true;
+			m_LeftPressed = false;
 			if (m_isOnWater) {
-				m_Position.x = m_Position.x + m_SpeedOnWater * elapsedTime;
+				m_Position.x = m_Position.x + m_SpeedOnWater * elapsedTime * factor;
 			}
 			else {
-				m_Position.x = m_Position.x + m_Speed * elapsedTime;
+				m_Position.x = m_Position.x + m_Speed * elapsedTime * factor;
 			}
 
 			setFacingDirection(false);
@@ -81,22 +94,26 @@ void Snail::update(float elapsedTime, bool playerFacingDirection, Vector2f playe
 		if ((playerX > m_Position.x) || (playerX < m_Position.x)) {
 			if (playerY > m_Position.y)
 			{
+				m_UpPressed = true;
+				m_DownPressed = false;
 				if (m_isOnWater) {
-					m_Position.y = m_Position.y + m_SpeedOnWater * elapsedTime;
+					m_Position.y = m_Position.y + m_SpeedOnWater * elapsedTime * factor;
 				}
 				else {
-					m_Position.y = m_Position.y + m_Speed * elapsedTime;
+					m_Position.y = m_Position.y + m_Speed * elapsedTime * factor;
 				}
 			}
 		}
 
 		if (playerX < m_Position.x)
 		{
+			m_RightPressed = false;
+			m_LeftPressed = true;
 			if (m_isOnWater) {
-				m_Position.x = m_Position.x - m_SpeedOnWater * elapsedTime;
+				m_Position.x = m_Position.x - m_SpeedOnWater * elapsedTime * factor;
 			}
 			else {
-				m_Position.x = m_Position.x - m_Speed * elapsedTime;
+				m_Position.x = m_Position.x - m_Speed * elapsedTime * factor;
 			}
 
 			setFacingDirection(true);
@@ -105,11 +122,14 @@ void Snail::update(float elapsedTime, bool playerFacingDirection, Vector2f playe
 		if ((playerX > m_Position.x) || (playerX < m_Position.x)) {
 			if (playerY < m_Position.y)
 			{
+
+				m_UpPressed = false;
+				m_DownPressed = true;
 				if (m_isOnWater) {
-					m_Position.y = m_Position.y - m_SpeedOnWater * elapsedTime;
+					m_Position.y = m_Position.y - m_SpeedOnWater * elapsedTime * factor;
 				}
 				else {
-					m_Position.y = m_Position.y - m_Speed * elapsedTime;
+					m_Position.y = m_Position.y - m_Speed * elapsedTime * factor;
 				}
 			}
 		}

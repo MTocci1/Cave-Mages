@@ -34,11 +34,16 @@ void PlayableCharacter::update(float elapsedTime)
 		m_Shield = m_MaxShield;
 	}
 
-	float factor = 1.0f;
-	if (m_LeftPressed || m_RightPressed || m_UpPressed || m_DownPressed) {
-		// Normalize the movement vector to ensure consistent speed in all directions
-		factor = 1.0f / sqrt(2.0f);
+	// Count the number of keys pressed
+	int keysPressedCount = 0;
+	if (m_LeftPressed || m_RightPressed) {
+		keysPressedCount++;
 	}
+	if (m_UpPressed || m_DownPressed) {
+		keysPressedCount++;
+	}
+	// Update the factor based on the number of keys pressed
+	float factor = 1.0f / sqrt(keysPressedCount);
 
 	// Move the player
 	if (m_canMoveLeft) {

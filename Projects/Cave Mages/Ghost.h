@@ -3,6 +3,13 @@
 
 class Ghost : public Enemy
 {
+private: 
+	// Which directions is the spider currently moving in
+	bool m_LeftPressed;
+	bool m_RightPressed;
+	bool m_UpPressed;
+	bool m_DownPressed;
+
 public:
 	Ghost();
 

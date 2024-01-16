@@ -10,9 +10,9 @@ FireMage::FireMage()
 
 	// Player Stats
 	// How fast is the character
-	m_Speed = 700;
+	m_Speed = 600;
 	m_SpeedOnWater = m_Speed / 2;
-	m_dashSpeed = 1700;
+	m_dashSpeed = 1400;
 	m_dashSpeedOnWater = m_dashSpeed / 2;
 
 	m_Health = 100;

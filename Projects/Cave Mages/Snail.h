@@ -5,6 +5,12 @@ using namespace sf;
 
 class Snail {
 private:
+	// Which directions is the spider currently moving in
+	bool m_LeftPressed;
+	bool m_RightPressed;
+	bool m_UpPressed;
+	bool m_DownPressed;
+
 	// Where is the Snail
 	Vector2f m_Position;
 

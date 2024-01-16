@@ -106,6 +106,17 @@ void Scorpion::update(float elapsedTime, bool playerFacingDirection, Vector2f pl
 
 		isPlayerInRange(playerPosition);
 
+		// Count the number of keys pressed
+		int keysPressedCount = 0;
+		if (m_LeftPressed || m_RightPressed) {
+			keysPressedCount++;
+		}
+		if (m_UpPressed || m_DownPressed) {
+			keysPressedCount++;
+		}
+		// Update the factor based on the number of keys pressed
+		float factor = 1.0f / sqrt(keysPressedCount);
+
 		if (!m_isPlayerInRange && !m_isFleeing)
 		{
 			m_SpeedOnWater = m_Speed / 2;
@@ -122,37 +133,37 @@ void Scorpion::update(float elapsedTime, bool playerFacingDirection, Vector2f pl
 			if (m_LeftPressed)
 			{
 				if (m_isOnWater) {
-					m_Position.x -= m_SpeedOnWater * elapsedTime;
+					m_Position.x -= m_SpeedOnWater * elapsedTime * factor;
 				}
 				else {
-					m_Position.x -= m_Speed * elapsedTime;
+					m_Position.x -= m_Speed * elapsedTime * factor;
 				}
 			}
 			if (m_RightPressed)
 			{
 				if (m_isOnWater) {
-					m_Position.x += m_SpeedOnWater * elapsedTime;
+					m_Position.x += m_SpeedOnWater * elapsedTime * factor;
 				}
 				else {
-					m_Position.x += m_Speed * elapsedTime;
+					m_Position.x += m_Speed * elapsedTime * factor;
 				}
 			}
 			if (m_DownPressed)
 			{
 				if (m_isOnWater) {
-					m_Position.y += m_SpeedOnWater * elapsedTime;
+					m_Position.y += m_SpeedOnWater * elapsedTime * factor;
 				}
 				else {
-					m_Position.y += m_Speed * elapsedTime;
+					m_Position.y += m_Speed * elapsedTime * factor;
 				}
 			}
 			if (m_UpPressed)
 			{
 				if (m_isOnWater) {
-					m_Position.y -= m_SpeedOnWater * elapsedTime;
+					m_Position.y -= m_SpeedOnWater * elapsedTime * factor;
 				}
 				else {
-					m_Position.y -= m_Speed * elapsedTime;
+					m_Position.y -= m_Speed * elapsedTime * factor;
 				}
 			}
 		}
@@ -166,11 +177,13 @@ void Scorpion::update(float elapsedTime, bool playerFacingDirection, Vector2f pl
 			// Chase the Player
 			if (playerX > m_Position.x)
 			{
+				m_RightPressed = true;
+				m_LeftPressed = false;
 				if (m_isOnWater) {
-					m_Position.x = m_Position.x + m_ChargeSpeedOnWater * elapsedTime;
+					m_Position.x = m_Position.x + m_ChargeSpeedOnWater * elapsedTime * factor;
 				}
 				else {
-					m_Position.x = m_Position.x + m_ChargeSpeed * elapsedTime;
+					m_Position.x = m_Position.x + m_ChargeSpeed * elapsedTime * factor;
 				}
 				setFacingDirection(false);
 			}
@@ -178,22 +191,26 @@ void Scorpion::update(float elapsedTime, bool playerFacingDirection, Vector2f pl
 			if ((playerX > m_Position.x) || (playerX < m_Position.x)) {
 				if (playerY > m_Position.y)
 				{
+					m_UpPressed = true;
+					m_DownPressed = false;
 					if (m_isOnWater) {
-						m_Position.y = m_Position.y + m_ChargeSpeedOnWater * elapsedTime;
+						m_Position.y = m_Position.y + m_ChargeSpeedOnWater * elapsedTime * factor;
 					}
 					else {
-						m_Position.y = m_Position.y + m_ChargeSpeed * elapsedTime;
+						m_Position.y = m_Position.y + m_ChargeSpeed * elapsedTime * factor;
 					}
 				}
 			}
 
 			if (playerX < m_Position.x)
 			{
+				m_RightPressed = false;
+				m_LeftPressed = true;
 				if (m_isOnWater) {
-					m_Position.x = m_Position.x - m_ChargeSpeedOnWater * elapsedTime;
+					m_Position.x = m_Position.x - m_ChargeSpeedOnWater * elapsedTime * factor;
 				}
 				else {
-					m_Position.x = m_Position.x - m_ChargeSpeed * elapsedTime;
+					m_Position.x = m_Position.x - m_ChargeSpeed * elapsedTime * factor;
 				}
 				setFacingDirection(true);
 			}
@@ -201,11 +218,13 @@ void Scorpion::update(float elapsedTime, bool playerFacingDirection, Vector2f pl
 			if ((playerX > m_Position.x) || (playerX < m_Position.x)) {
 				if (playerY < m_Position.y)
 				{
+					m_UpPressed = false;
+					m_DownPressed = true;
 					if (m_isOnWater) {
-						m_Position.y = m_Position.y - m_ChargeSpeedOnWater * elapsedTime;
+						m_Position.y = m_Position.y - m_ChargeSpeedOnWater * elapsedTime * factor;
 					}
 					else {
-						m_Position.y = m_Position.y - m_ChargeSpeed * elapsedTime;
+						m_Position.y = m_Position.y - m_ChargeSpeed * elapsedTime * factor;
 					}
 				}
 			}
@@ -219,11 +238,13 @@ void Scorpion::update(float elapsedTime, bool playerFacingDirection, Vector2f pl
 			// Flee from the Player
 			if (playerX > m_Position.x)
 			{
+				m_RightPressed = false;
+				m_LeftPressed = true;
 				if (m_isOnWater) {
-					m_Position.x = m_Position.x - m_FleeSpeedOnWater * elapsedTime;
+					m_Position.x = m_Position.x - m_FleeSpeedOnWater * elapsedTime * factor;
 				}
 				else {
-					m_Position.x = m_Position.x - m_FleeSpeed * elapsedTime;
+					m_Position.x = m_Position.x - m_FleeSpeed * elapsedTime * factor;
 				}
 
 				setFacingDirection(true);
@@ -232,22 +253,26 @@ void Scorpion::update(float elapsedTime, bool playerFacingDirection, Vector2f pl
 			if ((playerX > m_Position.x) || (playerX < m_Position.x)) {
 				if (playerY > m_Position.y)
 				{
+					m_UpPressed = false;
+					m_DownPressed = true;
 					if (m_isOnWater) {
-						m_Position.y = m_Position.y - m_FleeSpeedOnWater * elapsedTime;
+						m_Position.y = m_Position.y - m_FleeSpeedOnWater * elapsedTime * factor;
 					}
 					else {
-						m_Position.y = m_Position.y - m_FleeSpeed * elapsedTime;
+						m_Position.y = m_Position.y - m_FleeSpeed * elapsedTime * factor;
 					}
 				}
 			}
 
 			if (playerX < m_Position.x)
 			{
+				m_RightPressed = true;
+				m_LeftPressed = false;
 				if (m_isOnWater) {
-					m_Position.x = m_Position.x + m_FleeSpeedOnWater * elapsedTime;
+					m_Position.x = m_Position.x + m_FleeSpeedOnWater * elapsedTime * factor;
 				}
 				else {
-					m_Position.x = m_Position.x + m_FleeSpeed * elapsedTime;
+					m_Position.x = m_Position.x + m_FleeSpeed * elapsedTime * factor;
 				}
 
 				setFacingDirection(false);
@@ -256,11 +281,13 @@ void Scorpion::update(float elapsedTime, bool playerFacingDirection, Vector2f pl
 			if ((playerX > m_Position.x) || (playerX < m_Position.x)) {
 				if (playerY < m_Position.y)
 				{
+					m_UpPressed = true;
+					m_DownPressed = false;
 					if (m_isOnWater) {
-						m_Position.y = m_Position.y + m_FleeSpeedOnWater * elapsedTime;
+						m_Position.y = m_Position.y + m_FleeSpeedOnWater * elapsedTime * factor;
 					}
 					else {
-						m_Position.y = m_Position.y + m_FleeSpeed * elapsedTime;
+						m_Position.y = m_Position.y + m_FleeSpeed * elapsedTime * factor;
 					}
 				}
 			}
