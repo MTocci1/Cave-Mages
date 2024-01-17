@@ -12,7 +12,7 @@ Snail::Snail()
 
 	m_isAlive = true;
 
-	m_Speed = 20;
+	m_Speed = 40;
 	m_SpeedOnWater = m_Speed / 2;
 }
 
@@ -76,62 +76,35 @@ void Snail::update(float elapsedTime, bool playerFacingDirection, Vector2f playe
 		// Update the factor based on the number of keys pressed
 		float factor = 1.0f / sqrt(keysPressedCount);
 
-		// Chase the Player
-		if (playerX > m_Position.x)
-		{
-			m_RightPressed = true;
-			m_LeftPressed = false;
-			if (m_isOnWater) {
-				m_Position.x = m_Position.x + m_SpeedOnWater * elapsedTime * factor;
-			}
-			else {
-				m_Position.x = m_Position.x + m_Speed * elapsedTime * factor;
-			}
+		// Chase the player
+		// Calculate direction to player
+		float directionX = playerX - m_Position.x;
+		float directionY = playerY - m_Position.y;
 
+		// Normalize the direction vector
+		float length = sqrt(directionX * directionX + directionY * directionY);
+		directionX /= length;
+		directionY /= length;
+
+		// Adjust movement flags based on direction
+		m_RightPressed = (directionX > 0);
+		m_LeftPressed = (directionX < 0);
+		m_UpPressed = (directionY > 0);
+		m_DownPressed = (directionY < 0);
+
+		// Move towards the player
+		if (m_RightPressed || m_LeftPressed || m_UpPressed || m_DownPressed) {
+			float speed = m_isOnWater ? m_SpeedOnWater : m_Speed;
+			m_Position.x += speed * elapsedTime * factor * directionX;
+			m_Position.y += speed * elapsedTime * factor * directionY;
+		}
+
+		// Adjust facing direction based on movement
+		if (directionX > 0) {
 			setFacingDirection(false);
 		}
-
-		if ((playerX > m_Position.x) || (playerX < m_Position.x)) {
-			if (playerY > m_Position.y)
-			{
-				m_UpPressed = true;
-				m_DownPressed = false;
-				if (m_isOnWater) {
-					m_Position.y = m_Position.y + m_SpeedOnWater * elapsedTime * factor;
-				}
-				else {
-					m_Position.y = m_Position.y + m_Speed * elapsedTime * factor;
-				}
-			}
-		}
-
-		if (playerX < m_Position.x)
-		{
-			m_RightPressed = false;
-			m_LeftPressed = true;
-			if (m_isOnWater) {
-				m_Position.x = m_Position.x - m_SpeedOnWater * elapsedTime * factor;
-			}
-			else {
-				m_Position.x = m_Position.x - m_Speed * elapsedTime * factor;
-			}
-
+		else if (directionX < 0) {
 			setFacingDirection(true);
-		}
-
-		if ((playerX > m_Position.x) || (playerX < m_Position.x)) {
-			if (playerY < m_Position.y)
-			{
-
-				m_UpPressed = false;
-				m_DownPressed = true;
-				if (m_isOnWater) {
-					m_Position.y = m_Position.y - m_SpeedOnWater * elapsedTime * factor;
-				}
-				else {
-					m_Position.y = m_Position.y - m_Speed * elapsedTime * factor;
-				}
-			}
 		}
 
 		// Keep the enemy in the arena

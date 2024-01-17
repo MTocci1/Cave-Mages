@@ -19,6 +19,14 @@ void LifeTreeBullet::shoot(float startX, float startY,
 	m_Position.y = startY;
 
 	m_InFlight = true;
+
+	// Set a max range of 1000 pixels
+	float range = 1000;
+	m_MinX = startX - range;
+	m_MaxX = startX + range;
+	m_MinY = startY - range;
+	m_MaxY = startY + range;
+
 	m_Sprite.setPosition(m_Position);
 	
 }
@@ -28,29 +36,25 @@ void LifeTreeBullet::followPlayer(Vector2f playerPosition, float elapsedTime)
 	float playerX = playerPosition.x;
 	float playerY = playerPosition.y;
 
-	// Chase the Player
-	if (playerX > m_Position.x)
+	//Chase the player
+	// Calculate direction to player
+	float directionX = playerX - m_Position.x;
+	float directionY = playerY - m_Position.y;
+
+	// Normalize the direction vector
+	float length = sqrt(directionX * directionX + directionY * directionY);
+	directionX /= length;
+	directionY /= length;
+
+	// Move towards the player
+	m_Position.x += m_Speed * elapsedTime * directionX;
+	m_Position.y += m_Speed * elapsedTime * directionY;
+
+	// Has the bullet gone out of range?
+	if (m_Position.x < m_MinX || m_Position.x > m_MaxX ||
+		m_Position.y < m_MinY || m_Position.y > m_MaxY)
 	{
-		m_Position.x = m_Position.x + m_Speed * elapsedTime;
-	}
-
-	if ((playerX > m_Position.x) || (playerX < m_Position.x)) {
-		if (playerY > m_Position.y)
-		{
-			m_Position.y = m_Position.y + m_Speed * elapsedTime;
-		}
-	}
-
-	if (playerX < m_Position.x)
-	{
-		m_Position.x = m_Position.x - m_Speed * elapsedTime;
-	}
-
-	if ((playerX > m_Position.x) || (playerX < m_Position.x)) {
-		if (playerY < m_Position.y)
-		{
-			m_Position.y = m_Position.y - m_Speed * elapsedTime;
-		}
+		m_InFlight = false;
 	}
 
 	// Move the bullet

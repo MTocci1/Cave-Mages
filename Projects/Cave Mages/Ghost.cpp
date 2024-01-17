@@ -23,7 +23,7 @@ Ghost::Ghost()
 
 	m_isAlive = true;
 
-	m_Speed = 200;
+	m_Speed = 300;
 	m_Health = 20;
 	m_Damage = 0;
 }
@@ -84,43 +84,37 @@ void Ghost::update(float elapsedTime, bool playerFacingDirection, Vector2f playe
 		// Update the factor based on the number of keys pressed
 		float factor = 1.0f / sqrt(keysPressedCount);
 
-		// Check the direction the player is facing
-		// playerFacingDirection is the bool facingLeft, if true player is facing left 
-		if (playerX > m_Position.x && !playerFacingDirection)
-		{
-			m_RightPressed = true;
-			m_LeftPressed = false;
-			m_Position.x = m_Position.x +
-				m_Speed * elapsedTime * factor;
+		//Chase the Player
+
+		// Calculate direction to player
+		float directionX = playerX - m_Position.x;
+		float directionY = playerY - m_Position.y;
+
+		// Normalize the direction vector
+		float length = sqrt(directionX * directionX + directionY * directionY);
+		directionX /= length;
+		directionY /= length;
+
+		// Adjust movement flags based on direction
+		m_RightPressed = (directionX > 0 && !playerFacingDirection);
+		m_LeftPressed = (directionX < 0 && playerFacingDirection);
+		m_UpPressed = (directionY > 0);
+		m_DownPressed = (directionY < 0);
+
+		// Move towards the player
+		if (m_RightPressed || m_LeftPressed) {
+			m_Position.x += m_Speed * elapsedTime * factor * directionX;
+			m_Position.y += m_Speed * elapsedTime * factor * directionY;
 		}
 
-		if ((playerX > m_Position.x && !playerFacingDirection) || (playerX < m_Position.x && playerFacingDirection)) {
-			if (playerY > m_Position.y)
-			{
-				m_UpPressed = true;
-				m_DownPressed = false;
-				m_Position.y = m_Position.y +
-					m_Speed * elapsedTime * factor;
-			}
+		// Adjust facing direction based on movement
+		if (directionX > 0) {
+			setFacingDirection(false);
+		}
+		else {
+			setFacingDirection(true);
 		}
 
-		if (playerX < m_Position.x && playerFacingDirection)
-		{
-			m_RightPressed = false;
-			m_LeftPressed = true;
-			m_Position.x = m_Position.x -
-				m_Speed * elapsedTime * factor;
-		}
-
-		if ((playerX > m_Position.x && !playerFacingDirection) || (playerX < m_Position.x && playerFacingDirection)) {
-			if (playerY < m_Position.y)
-			{
-				m_UpPressed = false;
-				m_DownPressed = true;
-				m_Position.y = m_Position.y -
-					m_Speed * elapsedTime * factor;
-			}
-		}
 	}
 
 	// Only show damage text for a limited time

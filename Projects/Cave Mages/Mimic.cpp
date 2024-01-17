@@ -150,43 +150,27 @@ void Mimic::update(float elapsedTime, bool playerFacingDirection, Vector2f playe
 			}
 
 			// Move the mimic
-			if (m_LeftPressed)
-			{
-				if (m_isOnWater) {
-					m_Position.x -= m_DodgeSpeedOnWater * elapsedTime * factor;
-				}
-				else {
-					m_Position.x -= m_DodgeSpeed * elapsedTime * factor;
-				}
+			float dodgeSpeed = m_isOnWater ? m_DodgeSpeedOnWater : m_DodgeSpeed;
+			float xDirection = 0.0f, yDirection = 0.0f;
+
+			if (m_LeftPressed) {
+				xDirection -= dodgeSpeed * elapsedTime * factor;
 			}
-			if (m_RightPressed)
-			{
-				if (m_isOnWater) {
-					m_Position.x += m_DodgeSpeedOnWater * elapsedTime * factor;
-				}
-				else {
-					m_Position.x += m_DodgeSpeed * elapsedTime * factor;
-				}
+			if (m_RightPressed) {
+				xDirection += dodgeSpeed * elapsedTime * factor;
 			}
-			if (m_DownPressed)
-			{
-				if (m_isOnWater) {
-					m_Position.y += m_DodgeSpeedOnWater * elapsedTime * factor;
-				}
-				else {
-					m_Position.y += m_DodgeSpeed * elapsedTime * factor;
-				}
+			if (m_DownPressed) {
+				yDirection += dodgeSpeed * elapsedTime * factor;
 			}
-			if (m_UpPressed)
-			{
-				if (m_isOnWater) {
-					m_Position.y -= m_DodgeSpeedOnWater * elapsedTime * factor;
-				}
-				else {
-					m_Position.y -= m_DodgeSpeed * elapsedTime * factor;
-				}
+			if (m_UpPressed) {
+				yDirection -= dodgeSpeed * elapsedTime * factor;
 			}
+
+			m_Position.x += xDirection;
+			m_Position.y += yDirection;
+
 		}
+		// Chase the player
 		else
 		{
 			m_SpeedOnWater = m_Speed / 2;
@@ -194,57 +178,34 @@ void Mimic::update(float elapsedTime, bool playerFacingDirection, Vector2f playe
 			float playerX = playerPosition.x;
 			float playerY = playerPosition.y;
 
-			// Chase the Player
-			if (playerX > m_Position.x)
-			{
-				m_RightPressed = true;
-				m_LeftPressed = false;
-				if (m_isOnWater) {
-					m_Position.x = m_Position.x + m_SpeedOnWater * elapsedTime * factor;
-				}
-				else {
-					m_Position.x = m_Position.x + m_Speed * elapsedTime * factor;
-				}
+			// Calculate direction to player
+			float directionX = playerX - m_Position.x;
+			float directionY = playerY - m_Position.y;
+
+			// Normalize the direction vector
+			float length = sqrt(directionX * directionX + directionY * directionY);
+			directionX /= length;
+			directionY /= length;
+
+			// Adjust movement flags based on direction
+			m_RightPressed = (directionX > 0);
+			m_LeftPressed = (directionX < 0);
+			m_UpPressed = (directionY > 0);
+			m_DownPressed = (directionY < 0);
+
+			// Move towards the player
+			if (m_RightPressed || m_LeftPressed || m_UpPressed || m_DownPressed) {
+				float speed = m_isOnWater ? m_SpeedOnWater : m_Speed;
+				m_Position.x += speed * elapsedTime * factor * directionX;
+				m_Position.y += speed * elapsedTime * factor * directionY;
 			}
 
-			if ((playerX > m_Position.x) || (playerX < m_Position.x)) {
-				if (playerY > m_Position.y)
-				{
-					m_UpPressed = true;
-					m_DownPressed = false;
-					if (m_isOnWater) {
-						m_Position.y = m_Position.y + m_SpeedOnWater * elapsedTime * factor;
-					}
-					else {
-						m_Position.y = m_Position.y + m_Speed * elapsedTime * factor;
-					}
-				}
+			// Adjust facing direction based on movement
+			if (directionX > 0) {
+				setFacingDirection(false);
 			}
-
-			if (playerX < m_Position.x)
-			{
-				m_RightPressed = false;
-				m_LeftPressed = true;
-				if (m_isOnWater) {
-					m_Position.x = m_Position.x - m_SpeedOnWater * elapsedTime * factor;
-				}
-				else {
-					m_Position.x = m_Position.x - m_Speed * elapsedTime * factor;
-				}
-			}
-
-			if ((playerX > m_Position.x) || (playerX < m_Position.x)) {
-				if (playerY < m_Position.y)
-				{
-					m_UpPressed = false;
-					m_DownPressed = true;
-					if (m_isOnWater) {
-						m_Position.y = m_Position.y - m_SpeedOnWater * elapsedTime * factor;
-					}
-					else {
-						m_Position.y = m_Position.y - m_Speed * elapsedTime * factor;
-					}
-				}
+			else {
+				setFacingDirection(true);
 			}
 		}
 

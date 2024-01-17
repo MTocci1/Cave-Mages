@@ -25,9 +25,9 @@ Mummy::Mummy()
 
 	m_isAlive = true;
 
-	m_Speed = 50;
+	m_Speed = 100;
 	m_SpeedOnWater = m_Speed / 2;
-	m_ChargeSpeed = 200;
+	m_ChargeSpeed = 300;
 
 	m_Health = 100;
 	m_Damage = 0;
@@ -163,42 +163,35 @@ void Mummy::update(float elapsedTime, bool playerFacingDirection, Vector2f playe
 		else if (m_isPlayerInRange && !m_isIdle)
 		{
 
+			// Chase the Player
 			float playerX = playerPosition.x;
 			float playerY = playerPosition.y;
 
-			// Chase the Player
-			if (playerX > m_Position.x)
-			{
-				m_RightPressed = true;
-				m_LeftPressed = false;
-				m_Position.x = m_Position.x + m_ChargeSpeed * elapsedTime * factor;
+			// Calculate direction to player
+			float directionX = playerX - m_Position.x;
+			float directionY = playerY - m_Position.y;
+
+			// Normalize the direction vector
+			float length = sqrt(directionX * directionX + directionY * directionY);
+			directionX /= length;
+			directionY /= length;
+
+			// Adjust movement flags based on direction
+			m_RightPressed = (directionX > 0);
+			m_LeftPressed = (directionX < 0);
+			m_UpPressed = (directionY > 0);
+			m_DownPressed = (directionY < 0);
+
+			// Move towards the player
+			m_Position.x += m_ChargeSpeed * elapsedTime * factor * directionX;
+			m_Position.y += m_ChargeSpeed * elapsedTime * factor * directionY;
+
+			// Adjust facing direction based on movement
+			if (directionX > 0) {
 				setFacingDirection(false);
 			}
-
-			if ((playerX > m_Position.x) || (playerX < m_Position.x)) {
-				if (playerY > m_Position.y)
-				{
-					m_UpPressed = true;
-					m_DownPressed = false;
-					m_Position.y = m_Position.y + m_ChargeSpeed * elapsedTime * factor;
-				}
-			}
-
-			if (playerX < m_Position.x)
-			{
-				m_RightPressed = false;
-				m_LeftPressed = true;
-				m_Position.x = m_Position.x - m_ChargeSpeed * elapsedTime * factor;
+			else {
 				setFacingDirection(true);
-			}
-
-			if ((playerX > m_Position.x) || (playerX < m_Position.x)) {
-				if (playerY < m_Position.y)
-				{
-					m_UpPressed = false;
-					m_DownPressed = true;
-					m_Position.y = m_Position.y - m_ChargeSpeed * elapsedTime * factor;
-				}
 			}
 		}
 		else if (m_isIdle) 

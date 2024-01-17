@@ -25,9 +25,9 @@ Spider::Spider()
 
 	m_isAlive = true;
 
-	m_Speed = 200;
+	m_Speed = 300;
 	m_SpeedOnWater = m_Speed / 2;
-	m_ChargeSpeed = 400;
+	m_ChargeSpeed = 600;
 	m_ChargeSpeedOnWater = m_ChargeSpeed / 2;
 
 	m_Health = 20;
@@ -125,43 +125,26 @@ void Spider::update(float elapsedTime, bool playerFacingDirection, Vector2f play
 			}
 
 			// Move the spider
-			if (m_LeftPressed)
-			{
-				if (m_isOnWater) {
-					m_Position.x -= m_SpeedOnWater * elapsedTime * factor;
-				}
-				else {
-					m_Position.x -= m_Speed * elapsedTime * factor;
-				}
+			float speed = m_isOnWater ? m_SpeedOnWater : m_Speed;
+			float xDirection = 0.0f, yDirection = 0.0f;
+
+			if (m_LeftPressed) {
+				xDirection -= speed * elapsedTime * factor;
 			}
-			if (m_RightPressed)
-			{
-				if (m_isOnWater) {
-					m_Position.x += m_SpeedOnWater * elapsedTime * factor;
-				}
-				else {
-					m_Position.x += m_Speed * elapsedTime * factor;
-				}
+			if (m_RightPressed) {
+				xDirection += speed * elapsedTime * factor;
 			}
-			if (m_DownPressed)
-			{
-				if (m_isOnWater) {
-					m_Position.y += m_SpeedOnWater * elapsedTime * factor;
-				}
-				else {
-					m_Position.y += m_Speed * elapsedTime * factor;
-				}
+			if (m_DownPressed) {
+				yDirection += speed * elapsedTime * factor;
 			}
-			if (m_UpPressed)
-			{
-				if (m_isOnWater) {
-					m_Position.y -= m_SpeedOnWater * elapsedTime * factor;
-				}
-				else {
-					m_Position.y -= m_Speed * elapsedTime * factor;
-				}
+			if (m_UpPressed) {
+				yDirection -= speed * elapsedTime * factor;
 			}
+
+			m_Position.x += xDirection;
+			m_Position.y += yDirection;
 		}
+		// Chase the player
 		else 
 		{
 			m_ChargeSpeedOnWater = m_ChargeSpeed / 2;
@@ -169,59 +152,38 @@ void Spider::update(float elapsedTime, bool playerFacingDirection, Vector2f play
 			float playerX = playerPosition.x;
 			float playerY = playerPosition.y;
 
-			// Chase the Player
-			if (playerX > m_Position.x)
-			{
-				m_RightPressed = true;
-				m_LeftPressed = false;
-				if (m_isOnWater) {
-					m_Position.x = m_Position.x + m_ChargeSpeedOnWater * elapsedTime * factor;
-				}
-				else {
-					m_Position.x = m_Position.x + m_ChargeSpeed * elapsedTime * factor;
-				}
+			// Calculate direction to player
+			float directionX = playerX - m_Position.x;
+			float directionY = playerY - m_Position.y;
+
+			// Normalize the direction vector
+			float length = sqrt(directionX * directionX + directionY * directionY);
+			directionX /= length;
+			directionY /= length;
+
+			// Adjust movement flags based on direction
+			m_RightPressed = (directionX > 0);
+			m_LeftPressed = (directionX < 0);
+			m_UpPressed = (directionY > 0);
+			m_DownPressed = (directionY < 0);
+
+			// Move towards the player
+			if (m_RightPressed || m_LeftPressed) {
+				float speed = m_isOnWater ? m_ChargeSpeedOnWater : m_ChargeSpeed;
+				m_Position.x += speed * elapsedTime * factor * directionX;
+			}
+
+			if (m_UpPressed || m_DownPressed) {
+				float speed = m_isOnWater ? m_ChargeSpeedOnWater : m_ChargeSpeed;
+				m_Position.y += speed * elapsedTime * factor * directionY;
+			}
+
+			// Adjust facing direction based on movement
+			if (directionX > 0) {
 				setFacingDirection(false);
 			}
-
-			if ((playerX > m_Position.x) || (playerX < m_Position.x)) {
-				if (playerY > m_Position.y)
-				{
-					m_UpPressed = true;
-					m_DownPressed = false;
-					if (m_isOnWater) {
-						m_Position.y = m_Position.y + m_ChargeSpeedOnWater * elapsedTime * factor;
-					}
-					else {
-						m_Position.y = m_Position.y + m_ChargeSpeed * elapsedTime * factor;
-					}
-				}
-			}
-
-			if (playerX < m_Position.x)
-			{
-				m_RightPressed = true;
-				m_LeftPressed = false;
-				if (m_isOnWater) {
-					m_Position.x = m_Position.x - m_ChargeSpeedOnWater * elapsedTime * factor;
-				}
-				else {
-					m_Position.x = m_Position.x - m_ChargeSpeed * elapsedTime * factor;
-				}
+			else {
 				setFacingDirection(true);
-			}
-
-			if ((playerX > m_Position.x) || (playerX < m_Position.x)) {
-				if (playerY < m_Position.y)
-				{
-					m_UpPressed = false;
-					m_DownPressed = true;
-					if (m_isOnWater) {
-						m_Position.y = m_Position.y - m_ChargeSpeedOnWater * elapsedTime * factor;
-					}
-					else {
-						m_Position.y = m_Position.y - m_ChargeSpeed * elapsedTime * factor;
-					}
-				}
 			}
 		}
 
