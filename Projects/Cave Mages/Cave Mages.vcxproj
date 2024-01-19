@@ -163,6 +163,7 @@
     <ClCompile Include="ShieldStation.cpp" />
     <ClCompile Include="Slime.cpp" />
     <ClCompile Include="Snail.cpp" />
+    <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="Spider.cpp" />
     <ClCompile Include="TextureHolder.cpp" />
     <ClCompile Include="Update.cpp" />
@@ -205,6 +206,7 @@
     <ClInclude Include="ShieldStation.h" />
     <ClInclude Include="Slime.h" />
     <ClInclude Include="Snail.h" />
+    <ClInclude Include="SoundManager.h" />
     <ClInclude Include="Spider.h" />
     <ClInclude Include="TextureHolder.h" />
     <ClInclude Include="Wall.h" />
