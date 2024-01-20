@@ -37,6 +37,7 @@
 #include "FireTurretBullet.h"
 #include "MainMenu.h"
 #include "DeployMenu.h"
+#include "SoundManager.h"
 
 
 using namespace sf;
@@ -107,6 +108,9 @@ private:
 
 	// The deploy menu
 	DeployMenu m_DeployMenu;
+
+	// The Sound Manager
+	SoundManager m_SoundManager;
 
 	// Vector of bullets
 	// Player Bullets

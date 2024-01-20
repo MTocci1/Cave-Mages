@@ -20,6 +20,11 @@ void Engine::update(float dtAsSeconds)
 		// Set the crosshair to the mouse world location
 		spriteCrosshair.setPosition(mouseWorldPosition);
 
+		// Stop Game Music
+		m_SoundManager.stopGameMusic();
+		// Play menu music
+		m_SoundManager.playMenuMusic();
+
 		m_MainMenu.update();
 	}
 
@@ -43,6 +48,11 @@ void Engine::update(float dtAsSeconds)
 
 	if (m_Playing)
 	{
+		// Stop Menu Music
+		m_SoundManager.stopMenuMusic();
+		// Play Game Music
+		m_SoundManager.playGameMusic();
+
 		if (m_NewWaveRequired)
 		{
 			// Delete all enemies, free memory
@@ -133,6 +143,10 @@ void Engine::update(float dtAsSeconds)
 
 		// Update Ability
 		m_Ability.update(dtAsSeconds, m_fireMage.getCenter().x, m_fireMage.getCenter().y);
+		// Stop fir ability noise if not active
+		if (!m_Ability.isActive()) {
+			m_SoundManager.stopFireAbility();
+		}
 
 		// Update Mimic Ability
 		m_MimicAbility.update(dtAsSeconds, m_Mimic.getCenter().x, m_Mimic.getCenter().y);
@@ -140,6 +154,8 @@ void Engine::update(float dtAsSeconds)
 		// Update HUD
 		m_Hud.update(m_fireMage.getHealth(), m_fireMage.getShield(), m_WaveNumber, m_EnemiesLeft, m_fireMage.getRealTimeAbilityCooldown(),
 			m_fireMage.getDashCooldown(), m_Mimic.getHealth(), m_fireMage.getXP());
+
+		m_SoundManager.update(m_fireMage.getCenter());
 
 		// Detect Collisions
 		PlayerCollisions(dtAsSeconds);

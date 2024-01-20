@@ -79,6 +79,9 @@ void Engine::input()
 			if ((m_GameTimeTotal.asSeconds() - m_lastAbility.asSeconds() > m_fireMage.getAbilityCooldown()) && !m_fireMage.getIsOnWater())
 			{
 				m_Ability.activate(m_fireMage.getAbilityActiveTime());
+				// Play Sound
+				m_SoundManager.playFireAbility();
+
 				m_lastAbility = m_GameTimeTotal;
 				m_fireMage.startAbilityCooldown();
 
