@@ -166,6 +166,12 @@ private:
 	int turretCost;
 	int treeCost;
 
+	// Hovering UI Buttons
+	bool wasHoveringTurretIcon = false;
+	bool wasHoveringTreeIcon = false;
+	bool wasHoveringPlay = false;
+	bool wasHoveringExit = false;
+
 	// GAME STATES
 	// Player begins game in main menu
 	bool m_inMainMenu = true;
@@ -186,6 +192,8 @@ private:
 	Vector2f findClosestEnemyToTurret(FireTurret& turret, const vector<Enemy*>& enemies);
 
 	bool isEnemyCloseToTurret(FireTurret& turret, const vector<Enemy*>& enemies);
+
+	Vector2f pixelToNormalizedCoords(const Vector2f& pixelCoords, const Vector2f& arenaSize);
 
 	void PlayerCollisions(float dtAsSeconds);
 

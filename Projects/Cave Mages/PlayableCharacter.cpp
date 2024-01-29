@@ -311,6 +311,7 @@ void PlayableCharacter::dash()
 {
 	if (m_canDash)
 	{
+		m_SoundManager.playDashSound();
 		m_isDashing = true;
 		m_canDash = false;
 	}

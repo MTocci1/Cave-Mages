@@ -1,5 +1,6 @@
 #pragma once
 #include "Enemy.h"
+#include <SFML/Audio.hpp>
 
 class Slime : public Enemy
 {

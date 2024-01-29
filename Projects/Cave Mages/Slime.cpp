@@ -33,7 +33,6 @@ Slime::Slime()
 	m_Damage = 10;
 
 	m_Level = 1;
-
 }
 
 void Slime::eatenEnemy()

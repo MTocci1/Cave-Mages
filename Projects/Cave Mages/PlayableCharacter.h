@@ -1,11 +1,14 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "SoundManager.h"
 
 using namespace sf;
 
 class PlayableCharacter
 {
 protected:
+	SoundManager m_SoundManager;
+
 	// Of course we will need a sprite
 	Sprite m_Sprite;
 

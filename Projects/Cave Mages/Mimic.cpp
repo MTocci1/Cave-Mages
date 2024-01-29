@@ -55,7 +55,7 @@ void Mimic::setup(float playerFireRate, int playerSpeed, int playerDamage, float
 	m_Resolution.y = resolution.y;
 
 	m_Position.x = m_Arena.width / 2;
-	m_Position.y = m_Arena.height / 4;
+	m_Position.y = m_Arena.height / 3;
 
 	m_Sprite.setPosition(m_Position);
 

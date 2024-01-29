@@ -14,8 +14,8 @@ private:
 	SoundBuffer m_GameMusicBuffer;
 	SoundBuffer m_MenuMusicBuffer;
 	SoundBuffer m_SelectTabBuffer;
-	SoundBuffer m_SlimeBuffer;
-	SoundBuffer m_SpiderHissBuffer;
+	SoundBuffer m_DashBuffer;
+	SoundBuffer m_CraftBuffer;
 
 	// The Sounds
 	Sound m_FireBulletSound;
@@ -25,17 +25,17 @@ private:
 	Sound m_GameMusicSound;
 	Sound m_MenuMusicSound;
 	Sound m_SelectTabSound;
-	Sound m_SlimeSound;
-	Sound m_SpiderHissSound;
+	Sound m_DashSound;
+	Sound m_CraftSound;
 
 	Vector2f m_ListenerLocation;
 
 public:
 	SoundManager();
 
-	void playFireBullet(Vector2f emitterLocation);
+	void playFireBullet();
 
-	void playFireBulletImpact(Vector2f emitterLocation);
+	void playFireBulletImpact();
 
 	void playFireAbility();
 
@@ -53,9 +53,9 @@ public:
 
 	void playDeathSound();
 
-	void playSlimeSound(Vector2f emitterLocation);
+	void playDashSound();
 
-	void playSpiderHiss(Vector2f emitterLocation);
+	void playCraftSound();
 
 	void update(Vector2f listenerLocation);
 };

@@ -48,10 +48,13 @@ void Engine::update(float dtAsSeconds)
 
 	if (m_Playing)
 	{
+		// Sound
+
 		// Stop Menu Music
 		m_SoundManager.stopMenuMusic();
 		// Play Game Music
 		m_SoundManager.playGameMusic();
+
 
 		if (m_NewWaveRequired)
 		{
@@ -345,6 +348,19 @@ Vector2f Engine::findClosestEnemyToTurret(FireTurret& turret, const vector<Enemy
 
 	return closestPosition;
 }
+
+Vector2f Engine::pixelToNormalizedCoords(const Vector2f& pixelCoords, const Vector2f& arenaSize) {
+	// Assuming screenSize is the size of your game window
+	float normalizedX = (2.0f * pixelCoords.x) / arenaSize.x - 1.0f;
+	float normalizedY = 1.0f - (2.0f * pixelCoords.y) / arenaSize.y;
+
+	// Ensure the values are within the valid range
+	normalizedX = std::max(-1.0f, std::min(1.0f, normalizedX));
+	normalizedY = std::max(-1.0f, std::min(1.0f, normalizedY));
+
+	return Vector2f(normalizedX, normalizedY);
+}
+
 
 void Engine::PlayerCollisions(float dtAsSeconds) {
 	// Player collide with dummy
@@ -921,6 +937,7 @@ void Engine::BulletCollisions(float dtAsSeconds) {
 			{
 				bullet->stop();
 				m_dummy.hit(m_fireMage.getDamage());
+				m_SoundManager.playFireBulletImpact();
 			}
 		}
 
@@ -929,6 +946,7 @@ void Engine::BulletCollisions(float dtAsSeconds) {
 			if (bullet->isInFlight())
 			{
 				bullet->stop();
+				m_SoundManager.playFireBulletImpact();
 				bool killed = m_Mimic.hit(m_fireMage.getDamage(), m_EnemiesLeft);
 				if (killed) {
 					m_fireMage.touchedXP(500);
@@ -941,6 +959,7 @@ void Engine::BulletCollisions(float dtAsSeconds) {
 			if (bullet->isInFlight())
 			{
 				bullet->stop();
+				m_SoundManager.playFireBulletImpact();
 			}
 		}
 
@@ -952,6 +971,7 @@ void Engine::BulletCollisions(float dtAsSeconds) {
 					if (bullet->isInFlight())
 					{
 						bullet->stop();
+						m_SoundManager.playFireBulletImpact();
 						bool killed = enemy->hit(m_fireMage.getDamage(), m_EnemiesLeft);
 						// Spawn XP if enemy is killed
 						if (killed) {
@@ -1012,6 +1032,7 @@ void Engine::BulletCollisions(float dtAsSeconds) {
 					if (bullet->isInFlight())
 					{
 						bullet->stop();
+						m_SoundManager.playFireBulletImpact();
 					}
 				}
 			}

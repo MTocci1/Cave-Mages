@@ -12,11 +12,18 @@ void Engine::input()
 		if (spriteCrosshair.getGlobalBounds().intersects(m_MainMenu.getPlayText().getGlobalBounds()))
 		{
 			hoveringPlay = true;
+			if (!wasHoveringPlay) {
+				m_SoundManager.playSelectTab();
+				wasHoveringPlay = true;
+			}
 			if (Mouse::isButtonPressed(Mouse::Left))
 			{
 				m_Playing = true;
 				m_inMainMenu = false;
 			}
+		}
+		if (!hoveringPlay) {
+			wasHoveringPlay = false;
 		}
 		m_MainMenu.setHoveringPlay(hoveringPlay);
 
@@ -25,10 +32,17 @@ void Engine::input()
 		if (spriteCrosshair.getGlobalBounds().intersects(m_MainMenu.getExitText().getGlobalBounds()))
 		{
 			hoveringExit = true;
+			if (!wasHoveringExit) {
+				m_SoundManager.playSelectTab();
+				wasHoveringExit = true;
+			}
 			if (Mouse::isButtonPressed(Mouse::Left))
 			{
 				m_Window.close();
 			}
+		}
+		if (!hoveringExit) {
+			wasHoveringExit = false;
 		}
 		m_MainMenu.setHoveringExit(hoveringExit);
 	}
@@ -54,6 +68,7 @@ void Engine::input()
 						m_fireMage.getCenter().x + 30, m_fireMage.getCenter().y - 50,
 						mouseWorldPosition.x, mouseWorldPosition.y, 1);
 				}
+				m_SoundManager.playFireBullet();
 				m_lastShot = m_GameTimeTotal;
 				bullets.push_back(bullet);
 
@@ -128,11 +143,16 @@ void Engine::input()
 		if (spriteCrosshair.getGlobalBounds().intersects(m_DeployMenu.getTurretIcon().getGlobalBounds()))
 		{
 			hoveringTurretIcon = true;
+			if (!wasHoveringTurretIcon) {
+				m_SoundManager.playSelectTab();
+				wasHoveringTurretIcon = true;
+			}
 			if (Mouse::isButtonPressed(Mouse::Left) && (m_fireMage.getXP() > turretCost))
 			{
 				m_currentDeployableStation->despawn();
 				Deployable* turret = new FireTurret(m_deployPosition);
 				deployables.push_back(turret);
+				m_SoundManager.playCraftSound();
 
 				// remove xp from player
 				m_fireMage.spentXP(turretCost);
@@ -143,6 +163,9 @@ void Engine::input()
 				m_PickingDeployable = false;
 			}
 		}
+		if (!hoveringTurretIcon) {
+			wasHoveringTurretIcon = false;
+		}
 		m_DeployMenu.setHoveringTurretIcon(hoveringTurretIcon);
 
 		// Player clicks tree
@@ -150,11 +173,16 @@ void Engine::input()
 		if (spriteCrosshair.getGlobalBounds().intersects(m_DeployMenu.getTreeIcon().getGlobalBounds()))
 		{
 			hoveringTreeIcon = true;
+			if (!wasHoveringTreeIcon) {
+				m_SoundManager.playSelectTab();
+				wasHoveringTreeIcon = true;
+			}
 			if (Mouse::isButtonPressed(Mouse::Left) && (m_fireMage.getXP() > treeCost))
 			{
 				m_currentDeployableStation->despawn();
 				Deployable* tree = new LifeTree(m_deployPosition);
 				deployables.push_back(tree);
+				m_SoundManager.playCraftSound();
 
 				//remove xp from player
 				m_fireMage.spentXP(treeCost);
@@ -164,6 +192,9 @@ void Engine::input()
 				m_Playing = true;
 				m_PickingDeployable = false;
 			}
+		}
+		if (!hoveringTreeIcon) {
+			wasHoveringTreeIcon = false;
 		}
 		m_DeployMenu.setHoveringTreeIcon(hoveringTreeIcon);
 
