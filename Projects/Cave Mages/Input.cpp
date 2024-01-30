@@ -51,21 +51,21 @@ void Engine::input()
 	{
 		if (Mouse::isButtonPressed(Mouse::Left))
 		{
-			if (m_GameTimeTotal.asMilliseconds() - m_lastShot.asMilliseconds() > 1000 / m_fireMage.getFireRate())
+			if (m_GameTimeTotal.asMilliseconds() - m_lastShot.asMilliseconds() > 1000 / player->getFireRate())
 			{
 				// Pass the centre of the player 
 				// and the centre of the cross-hair
 				// to the shoot function
 				// the number of bullets shot is equal to the multishot level
 				Bullet* bullet = new FireBullet();
-				if (m_fireMage.getFacingDirection()) {
+				if (player->getFacingDirection()) {
 					bullet->shoot(
-						m_fireMage.getCenter().x - 30, m_fireMage.getCenter().y - 50,
+						player->getCenter().x - 30, player->getCenter().y - 50,
 						mouseWorldPosition.x, mouseWorldPosition.y, 1);
 				}
 				else {
 					bullet->shoot(
-						m_fireMage.getCenter().x + 30, m_fireMage.getCenter().y - 50,
+						player->getCenter().x + 30, player->getCenter().y - 50,
 						mouseWorldPosition.x, mouseWorldPosition.y, 1);
 				}
 				m_SoundManager.playFireBullet();
@@ -75,15 +75,15 @@ void Engine::input()
 				if (m_Mimic.getIsAlive())
 				{
 					Bullet* mimicBullet = new MimicBullet();
-					if (m_fireMage.getFacingDirection()) {
+					if (player->getFacingDirection()) {
 						mimicBullet->shoot(
 							m_Mimic.getCenter().x - 30, m_Mimic.getCenter().y - 50,
-							m_fireMage.getCenter().x, m_fireMage.getCenter().y, 1);
+							player->getCenter().x, player->getCenter().y, 1);
 					}
 					else {
 						mimicBullet->shoot(
 							m_Mimic.getCenter().x + 30, m_Mimic.getCenter().y - 50,
-							m_fireMage.getCenter().x, m_fireMage.getCenter().y, 1);
+							player->getCenter().x, player->getCenter().y, 1);
 					}
 					mimicBullets.push_back(mimicBullet);
 				}
@@ -91,18 +91,18 @@ void Engine::input()
 		}
 		if (Keyboard::isKeyPressed(Keyboard::E))
 		{
-			if ((m_GameTimeTotal.asSeconds() - m_lastAbility.asSeconds() > m_fireMage.getAbilityCooldown()) && !m_fireMage.getIsOnWater())
+			if ((m_GameTimeTotal.asSeconds() - m_lastAbility.asSeconds() > player->getAbilityCooldown()) && !player->getIsOnWater())
 			{
-				m_Ability.activate(m_fireMage.getAbilityActiveTime());
+				m_Ability.activate(player->getAbilityActiveTime());
 				// Play Sound
 				m_SoundManager.playFireAbility();
 
 				m_lastAbility = m_GameTimeTotal;
-				m_fireMage.startAbilityCooldown();
+				player->startAbilityCooldown();
 
 				if (m_Mimic.getIsAlive())
 				{
-					m_MimicAbility.activate(m_fireMage.getAbilityActiveTime());
+					m_MimicAbility.activate(player->getAbilityActiveTime());
 				}
 			}
 		}
@@ -133,7 +133,7 @@ void Engine::input()
 			}
 		}
 
-		m_fireMage.handleInput();
+		player->handleInput();
 	}
 	
 	// Player picking deployable
@@ -147,7 +147,7 @@ void Engine::input()
 				m_SoundManager.playSelectTab();
 				wasHoveringTurretIcon = true;
 			}
-			if (Mouse::isButtonPressed(Mouse::Left) && (m_fireMage.getXP() > turretCost))
+			if (Mouse::isButtonPressed(Mouse::Left) && (player->getXP() > turretCost))
 			{
 				m_currentDeployableStation->despawn();
 				Deployable* turret = new FireTurret(m_deployPosition);
@@ -155,7 +155,7 @@ void Engine::input()
 				m_SoundManager.playCraftSound();
 
 				// remove xp from player
-				m_fireMage.spentXP(turretCost);
+				player->spentXP(turretCost);
 
 				m_deployableStationsToSpawn -= 1;
 
@@ -177,7 +177,7 @@ void Engine::input()
 				m_SoundManager.playSelectTab();
 				wasHoveringTreeIcon = true;
 			}
-			if (Mouse::isButtonPressed(Mouse::Left) && (m_fireMage.getXP() > treeCost))
+			if (Mouse::isButtonPressed(Mouse::Left) && (player->getXP() > treeCost))
 			{
 				m_currentDeployableStation->despawn();
 				Deployable* tree = new LifeTree(m_deployPosition);
@@ -185,7 +185,7 @@ void Engine::input()
 				m_SoundManager.playCraftSound();
 
 				//remove xp from player
-				m_fireMage.spentXP(treeCost);
+				player->spentXP(treeCost);
 
 				m_deployableStationsToSpawn -= 1;
 

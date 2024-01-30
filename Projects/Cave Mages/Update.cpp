@@ -99,53 +99,53 @@ void Engine::update(float dtAsSeconds)
 
 		// Set the direction the player is facing
 		bool isAimingRight = false;
-		if (mouseWorldPosition.x > m_fireMage.getCenter().x - 150) {
+		if (mouseWorldPosition.x > player->getCenter().x - 150) {
 			isAimingRight = true;
 		}
-		m_fireMage.setFacingDirection(isAimingRight);
+		player->setFacingDirection(isAimingRight);
 		if (m_Mimic.getIsAlive())
 		{
 			m_Mimic.setFacingDirection(isAimingRight);
 		}
 
 		// Update fireMage
-		m_fireMage.update(dtAsSeconds);
+		player->update(dtAsSeconds);
 
 		// Update dummy
 		m_dummy.update(dtAsSeconds);
 
-		m_Mimic.update(dtAsSeconds, m_fireMage.getFacingDirection(), m_fireMage.getCenter());
+		m_Mimic.update(dtAsSeconds, player->getFacingDirection(), player->getCenter());
 
 		// Update all enemies except slime
 		for (const auto& enemy : enemies) {
 			if (!dynamic_cast<Slime*>(enemy)) {
-				enemy->update(dtAsSeconds, m_fireMage.getFacingDirection(), m_fireMage.getCenter());
+				enemy->update(dtAsSeconds, player->getFacingDirection(), player->getCenter());
 			}
 		}
 		// Update slime
 		for (auto& enemy : enemies) {
 			if (auto* slimeEnemy = dynamic_cast<Slime*>(enemy)) {
-				Vector2f closestTargetPosition = findClosestSlimeTarget(*slimeEnemy, enemies, m_fireMage);
-				slimeEnemy->update(dtAsSeconds, m_fireMage.getFacingDirection(), closestTargetPosition);
+				Vector2f closestTargetPosition = findClosestSlimeTarget(*slimeEnemy, enemies, player);
+				slimeEnemy->update(dtAsSeconds, player->getFacingDirection(), closestTargetPosition);
 			}
 		}
 
 		// Update All XPs
 		for (auto& xp : xps) {
-			xp->update(dtAsSeconds, m_fireMage.getCenter());
+			xp->update(dtAsSeconds, player->getCenter());
 		}
 
 		// Update all deployables
 		for (auto& deployable : deployables)
 		{
-			deployable->update(dtAsSeconds, m_fireMage.getCenter());
+			deployable->update(dtAsSeconds, player->getCenter());
 		}
 
 		// Update the snail
-		m_Snail.update(dtAsSeconds, m_fireMage.getFacingDirection(), m_fireMage.getCenter());
+		m_Snail.update(dtAsSeconds, player->getFacingDirection(), player->getCenter());
 
 		// Update Ability
-		m_Ability.update(dtAsSeconds, m_fireMage.getCenter().x, m_fireMage.getCenter().y);
+		m_Ability.update(dtAsSeconds, player->getCenter().x, player->getCenter().y);
 		// Stop fir ability noise if not active
 		if (!m_Ability.isActive()) {
 			m_SoundManager.stopFireAbility();
@@ -155,10 +155,10 @@ void Engine::update(float dtAsSeconds)
 		m_MimicAbility.update(dtAsSeconds, m_Mimic.getCenter().x, m_Mimic.getCenter().y);
 
 		// Update HUD
-		m_Hud.update(m_fireMage.getHealth(), m_fireMage.getShield(), m_WaveNumber, m_EnemiesLeft, m_fireMage.getRealTimeAbilityCooldown(),
-			m_fireMage.getDashCooldown(), m_Mimic.getHealth(), m_fireMage.getXP());
+		m_Hud.update(player->getHealth(), player->getShield(), m_WaveNumber, m_EnemiesLeft, player->getRealTimeAbilityCooldown(),
+			player->getDashCooldown(), m_Mimic.getHealth(), player->getXP());
 
-		m_SoundManager.update(m_fireMage.getCenter());
+		m_SoundManager.update(player->getCenter());
 
 		// Detect Collisions
 		PlayerCollisions(dtAsSeconds);
@@ -176,7 +176,7 @@ void Engine::update(float dtAsSeconds)
 		for (const auto& obstacle : obstacles) {
 			if (auto* deployable = dynamic_cast<DeployableStation*>(obstacle)) {
 				if (deployable->getIsSpawned()) {
-					deployable->isPlayerInRange(m_fireMage.getCenter());
+					deployable->isPlayerInRange(player->getCenter());
 				}
 			}
 		}
@@ -205,8 +205,8 @@ void Engine::update(float dtAsSeconds)
 		// Has XP collided with player?
 		for (auto& xp : xps) {
 			if (xp->getIsSpawned()) {
-				if (xp->getPosition().intersects(m_fireMage.getPosition())) {
-					m_fireMage.touchedXP(xp->getValue());
+				if (xp->getPosition().intersects(player->getPosition())) {
+					player->touchedXP(xp->getValue());
 					xp->touchedByPlayer();
 				}
 			}
@@ -221,7 +221,7 @@ void Engine::update(float dtAsSeconds)
 							Bullet* bullet = new LifeTreeBullet(tree->getHealAmount());
 							bullet->shoot(
 								tree->getCenter().x, tree->getCenter().y,
-								m_fireMage.getCenter().x, m_fireMage.getCenter().y, 1);
+								player->getCenter().x, player->getCenter().y, 1);
 							tree->setLastShot(m_GameTimeTotal);
 							lifeTreeBullets.push_back(bullet);
 						}
@@ -269,16 +269,16 @@ void Engine::update(float dtAsSeconds)
 
 	}// End if playing
 
-	m_MainView.setCenter(m_fireMage.getCenter());
+	m_MainView.setCenter(player->getCenter());
 }
 
-Vector2f Engine::findClosestSlimeTarget(Slime& currentSlime, const vector<Enemy*>& enemies, FireMage& player)
+Vector2f Engine::findClosestSlimeTarget(Slime& currentSlime, const vector<Enemy*>& enemies, PlayableCharacter* player)
 {
 	Vector2f closestPosition;
 	float closestDistance = std::numeric_limits<float>::infinity();
 
 	// Check the distance to the player
-	Vector2f playerPosition = player.getCenter();
+	Vector2f playerPosition = player->getCenter();
 	float playerDistance = std::sqrt(std::pow(currentSlime.getCenter().x - playerPosition.x, 2) +
 		std::pow(currentSlime.getCenter().y - playerPosition.y, 2));
 
@@ -364,9 +364,9 @@ Vector2f Engine::pixelToNormalizedCoords(const Vector2f& pixelCoords, const Vect
 
 void Engine::PlayerCollisions(float dtAsSeconds) {
 	// Player collide with dummy
-	if (m_fireMage.getPosition().intersects(m_dummy.getPosition()))
+	if (player->getPosition().intersects(m_dummy.getPosition()))
 	{
-		m_fireMage.cancelMovement();
+		player->cancelMovement();
 	}
 
 	// Player collide with object
@@ -377,7 +377,7 @@ void Engine::PlayerCollisions(float dtAsSeconds) {
 	bool rightHitObject = true;
 	for (const auto& obstacle : obstacles) {
 		if (auto* rock = dynamic_cast<Wall*>(obstacle)) {
-			if (m_fireMage.getHeadHitBox().intersects(rock->getPosition()))
+			if (player->getHeadHitBox().intersects(rock->getPosition()))
 			{
 				headHitObject = false;
 			}
@@ -386,7 +386,7 @@ void Engine::PlayerCollisions(float dtAsSeconds) {
 	// Player feet collide with Rock
 	for (const auto& obstacle : obstacles) {
 		if (auto* rock = dynamic_cast<Wall*>(obstacle)) {
-			if (m_fireMage.getFeetHitBox().intersects(rock->getPosition()))
+			if (player->getFeetHitBox().intersects(rock->getPosition()))
 			{
 				feetHitObject = false;
 			}
@@ -395,7 +395,7 @@ void Engine::PlayerCollisions(float dtAsSeconds) {
 	// Player left collide with Rock
 	for (const auto& obstacle : obstacles) {
 		if (auto* rock = dynamic_cast<Wall*>(obstacle)) {
-			if (m_fireMage.getLeftHitBox().intersects(rock->getPosition()))
+			if (player->getLeftHitBox().intersects(rock->getPosition()))
 			{
 				leftHitObject = false;
 			}
@@ -404,7 +404,7 @@ void Engine::PlayerCollisions(float dtAsSeconds) {
 	// Player right collide with Rock
 	for (const auto& obstacle : obstacles) {
 		if (auto* rock = dynamic_cast<Wall*>(obstacle)) {
-			if (m_fireMage.getRightHitBox().intersects(rock->getPosition()))
+			if (player->getRightHitBox().intersects(rock->getPosition()))
 			{
 				rightHitObject = false;
 			}
@@ -416,7 +416,7 @@ void Engine::PlayerCollisions(float dtAsSeconds) {
 	for (const auto& obstacle : obstacles) {
 		if (auto* deployable = dynamic_cast<DeployableStation*>(obstacle)) {
 			if (deployable->isSpawned()) {
-				if (m_fireMage.getHeadHitBox().intersects(deployable->getPosition()))
+				if (player->getHeadHitBox().intersects(deployable->getPosition()))
 				{
 					headHitObject = false;
 				}
@@ -427,7 +427,7 @@ void Engine::PlayerCollisions(float dtAsSeconds) {
 	for (const auto& obstacle : obstacles) {
 		if (auto* deployable = dynamic_cast<DeployableStation*>(obstacle)) {
 			if (deployable->isSpawned()) {
-				if (m_fireMage.getFeetHitBox().intersects(deployable->getPosition()))
+				if (player->getFeetHitBox().intersects(deployable->getPosition()))
 				{
 					feetHitObject = false;
 				}
@@ -438,7 +438,7 @@ void Engine::PlayerCollisions(float dtAsSeconds) {
 	for (const auto& obstacle : obstacles) {
 		if (auto* deployable = dynamic_cast<DeployableStation*>(obstacle)) {
 			if (deployable->isSpawned()) {
-				if (m_fireMage.getLeftHitBox().intersects(deployable->getPosition()))
+				if (player->getLeftHitBox().intersects(deployable->getPosition()))
 				{
 					leftHitObject = false;
 				}
@@ -449,7 +449,7 @@ void Engine::PlayerCollisions(float dtAsSeconds) {
 	for (const auto& obstacle : obstacles) {
 		if (auto* deployable = dynamic_cast<DeployableStation*>(obstacle)) {
 			if (deployable->isSpawned()) {
-				if (m_fireMage.getRightHitBox().intersects(deployable->getPosition()))
+				if (player->getRightHitBox().intersects(deployable->getPosition()))
 				{
 					rightHitObject = false;
 				}
@@ -460,52 +460,52 @@ void Engine::PlayerCollisions(float dtAsSeconds) {
 	// Player collide with Deployable
 	// Player head collide with Deployable
 	for (const auto& deployable : deployables) {
-		if (m_fireMage.getHeadHitBox().intersects(deployable->getPosition()))
+		if (player->getHeadHitBox().intersects(deployable->getPosition()))
 		{
 			headHitObject = false;
 		}
 	}
 	// Player feet collide with Deployable
 	for (const auto& deployable : deployables) {
-		if (m_fireMage.getFeetHitBox().intersects(deployable->getPosition()))
+		if (player->getFeetHitBox().intersects(deployable->getPosition()))
 		{
 			feetHitObject = false;
 		}
 	}
 	// Player left collide with Deployable
 	for (const auto& deployable : deployables) {
-		if (m_fireMage.getLeftHitBox().intersects(deployable->getPosition()))
+		if (player->getLeftHitBox().intersects(deployable->getPosition()))
 		{
 			leftHitObject = false;
 		}
 	}
 	// Player right collide with Deployable
 	for (const auto& deployable : deployables) {
-		if (m_fireMage.getRightHitBox().intersects(deployable->getPosition()))
+		if (player->getRightHitBox().intersects(deployable->getPosition()))
 		{
 			rightHitObject = false;
 		}
 	}
-	m_fireMage.setCanMoveUp(headHitObject);
-	m_fireMage.setCanMoveDown(feetHitObject);
-	m_fireMage.setCanMoveLeft(leftHitObject);
-	m_fireMage.setCanMoveRight(rightHitObject);
+	player->setCanMoveUp(headHitObject);
+	player->setCanMoveDown(feetHitObject);
+	player->setCanMoveLeft(leftHitObject);
+	player->setCanMoveRight(rightHitObject);
 
 	// Player collide with Health Station
 	for (const auto& obstacle : obstacles) {
 		if (auto* health = dynamic_cast<HealthStation*>(obstacle)) {
-			if (m_fireMage.getPosition().intersects(health->getPosition()))
+			if (player->getPosition().intersects(health->getPosition()))
 			{
-				m_fireMage.healthStationHeal();
+				player->healthStationHeal();
 			}
 		}
 	}
 	// Player collide with Shield Station
 	for (const auto& obstacle : obstacles) {
 		if (auto* shield = dynamic_cast<ShieldStation*>(obstacle)) {
-			if (m_fireMage.getPosition().intersects(shield->getPosition()))
+			if (player->getPosition().intersects(shield->getPosition()))
 			{
-				m_fireMage.shieldStationHeal();
+				player->shieldStationHeal();
 			}
 		}
 	}
@@ -518,7 +518,7 @@ void Engine::PlayerAbilityCollisions(float dtAsSeconds) {
 	{
 		if (m_Ability.isActive())
 		{
-			m_dummy.hitByAbility(m_fireMage.getAbilityDamage());
+			m_dummy.hitByAbility(player->getAbilityDamage());
 		}
 	}
 	// Hit an enemy?
@@ -528,7 +528,7 @@ void Engine::PlayerAbilityCollisions(float dtAsSeconds) {
 			{
 				if (m_Ability.isActive())
 				{
-					enemy->hitByAbility(m_fireMage.getAbilityDamage(), m_EnemiesLeft);
+					enemy->hitByAbility(player->getAbilityDamage(), m_EnemiesLeft);
 				}
 			}
 		}
@@ -538,7 +538,7 @@ void Engine::PlayerAbilityCollisions(float dtAsSeconds) {
 	{
 		if (m_Ability.isActive())
 		{
-			m_Mimic.hitByAbility(m_fireMage.getAbilityDamage(), m_EnemiesLeft);
+			m_Mimic.hitByAbility(player->getAbilityDamage(), m_EnemiesLeft);
 		}
 	}
 }
@@ -549,10 +549,10 @@ void Engine::EnemyCollisions(float dtAsSeconds) {
 	for (const auto& enemy : enemies) {
 		if (enemy->getIsAlive()) {
 			if (auto* ghost = dynamic_cast<Ghost*>(enemy)) {
-				if (ghost->getPosition().intersects(m_fireMage.getPosition()))
+				if (ghost->getPosition().intersects(player->getPosition()))
 				{
 					// Invert the player controls
-					m_fireMage.activatePossession();
+					player->activatePossession();
 					ghost->hitPlayer(m_EnemiesLeft);
 				}
 			}
@@ -562,10 +562,10 @@ void Engine::EnemyCollisions(float dtAsSeconds) {
 	for (const auto& enemy : enemies) {
 		if (enemy->getIsAlive()) {
 			if (auto* scorpion = dynamic_cast<Scorpion*>(enemy)) {
-				if (scorpion->getPosition().intersects(m_fireMage.getPosition()))
+				if (scorpion->getPosition().intersects(player->getPosition()))
 				{
 					// Invert the player controls
-					m_fireMage.activatePoison();
+					player->activatePoison();
 					scorpion->activateFlee();
 				}
 			}
@@ -581,7 +581,7 @@ void Engine::EnemyCollisions(float dtAsSeconds) {
 						Bullet* bullet = new MummyBullet();
 						bullet->shoot(
 							mummy->getCenter().x, mummy->getCenter().y,
-							m_fireMage.getCenter().x, m_fireMage.getCenter().y, 1);
+							player->getCenter().x, player->getCenter().y, 1);
 						mummy->setLastShot(m_GameTimeTotal);
 						mummyBullets.push_back(bullet);
 					}
@@ -745,7 +745,7 @@ void Engine::WaterCollisions(float dtAsSeconds) {
 	bool playerOnWater = false;
 	for (const auto& obstacle : obstacles) {
 		if (auto* water = dynamic_cast<Water*>(obstacle)) {
-			if (m_fireMage.getPosition().intersects(water->getPosition())) {
+			if (player->getPosition().intersects(water->getPosition())) {
 				playerOnWater = true;
 				// Exit the loop once a collision is detected
 				break;
@@ -753,7 +753,7 @@ void Engine::WaterCollisions(float dtAsSeconds) {
 		}
 	}
 	// Set the player's water state based on the result of the loop
-	m_fireMage.setIsOnWater(playerOnWater);
+	player->setIsOnWater(playerOnWater);
 
 	// Spider collide with Water
 		// Assume initially the spider is not on water
@@ -869,7 +869,7 @@ void Engine::WaterCollisions(float dtAsSeconds) {
 void Engine::BulletCollisions(float dtAsSeconds) {
 	// Has Mummy Bullet hit the player?
 	for (auto& bullet : mummyBullets) {
-		if (bullet->getPosition().intersects(m_fireMage.getPosition())) {
+		if (bullet->getPosition().intersects(player->getPosition())) {
 			if (bullet->isInFlight()) {
 				bullet->stop();
 			}
@@ -877,7 +877,7 @@ void Engine::BulletCollisions(float dtAsSeconds) {
 	}
 	// Has Mimic Bullet hit the player?
 	for (auto& bullet : mimicBullets) {
-		if (bullet->getPosition().intersects(m_fireMage.getPosition())) {
+		if (bullet->getPosition().intersects(player->getPosition())) {
 			if (bullet->isInFlight()) {
 				bullet->stop();
 			}
@@ -914,7 +914,7 @@ void Engine::BulletCollisions(float dtAsSeconds) {
 		if (auto* bullet = dynamic_cast<LifeTreeBullet*>(treeBullet)) {
 			if (bullet->isInFlight())
 			{
-				bullet->followPlayer(m_fireMage.getCenter(), dtAsSeconds);
+				bullet->followPlayer(player->getCenter(), dtAsSeconds);
 			}
 		}
 	}
@@ -936,7 +936,7 @@ void Engine::BulletCollisions(float dtAsSeconds) {
 			if (bullet->isInFlight())
 			{
 				bullet->stop();
-				m_dummy.hit(m_fireMage.getDamage());
+				m_dummy.hit(player->getDamage());
 				m_SoundManager.playFireBulletImpact();
 			}
 		}
@@ -947,9 +947,9 @@ void Engine::BulletCollisions(float dtAsSeconds) {
 			{
 				bullet->stop();
 				m_SoundManager.playFireBulletImpact();
-				bool killed = m_Mimic.hit(m_fireMage.getDamage(), m_EnemiesLeft);
+				bool killed = m_Mimic.hit(player->getDamage(), m_EnemiesLeft);
 				if (killed) {
-					m_fireMage.touchedXP(500);
+					player->touchedXP(500);
 				}
 			}
 		}
@@ -972,7 +972,7 @@ void Engine::BulletCollisions(float dtAsSeconds) {
 					{
 						bullet->stop();
 						m_SoundManager.playFireBulletImpact();
-						bool killed = enemy->hit(m_fireMage.getDamage(), m_EnemiesLeft);
+						bool killed = enemy->hit(player->getDamage(), m_EnemiesLeft);
 						// Spawn XP if enemy is killed
 						if (killed) {
 							// if Spider
@@ -1112,11 +1112,11 @@ void Engine::BulletCollisions(float dtAsSeconds) {
 				}
 			}
 
-			if (bullet->getPosition().intersects(m_fireMage.getPosition()))
+			if (bullet->getPosition().intersects(player->getPosition()))
 			{
 				if (bullet->isInFlight())
 				{
-					m_fireMage.shield(bullet->getHealAmount());
+					player->shield(bullet->getHealAmount());
 					bullet->stop();
 				}
 			}
@@ -1143,7 +1143,7 @@ void Engine::BulletCollisions(float dtAsSeconds) {
 					bullet->stop();
 					bool killed = m_Mimic.hit(bullet->getDamage(), m_EnemiesLeft);
 					if (killed) {
-						m_fireMage.touchedXP(500);
+						player->touchedXP(500);
 					}
 				}
 			}

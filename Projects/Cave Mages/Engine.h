@@ -38,6 +38,7 @@
 #include "MainMenu.h"
 #include "DeployMenu.h"
 #include "SoundManager.h"
+#include "waterMage.h"
 
 
 using namespace sf;
@@ -70,8 +71,7 @@ private:
 	Sprite spriteCrosshair;
 	Texture textureCrosshair;
 
-	// All the mages
-	FireMage m_fireMage;
+	PlayableCharacter* player;
 
 	// All the enemies
 	vector<Enemy*> enemies;
@@ -187,7 +187,7 @@ private:
 
 	void loadWave();
 
-	Vector2f findClosestSlimeTarget(Slime& currentSlime, const vector<Enemy*>& enemies, FireMage& player);
+	Vector2f findClosestSlimeTarget(Slime& currentSlime, const vector<Enemy*>& enemies, PlayableCharacter* player);
 
 	Vector2f findClosestEnemyToTurret(FireTurret& turret, const vector<Enemy*>& enemies);
 

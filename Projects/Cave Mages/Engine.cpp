@@ -33,7 +33,8 @@ Engine::Engine()
 	turretCost = 600;
 	treeCost = 600;
 
-	m_fireMage.spawn(arena, resolution, TILE_SIZE);
+	player = new FireMage();
+	player->spawn(arena, resolution, TILE_SIZE);
 
 	// Load the texture for our background vertex array
 	textureBackground = TextureHolder::GetTexture(

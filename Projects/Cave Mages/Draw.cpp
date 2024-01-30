@@ -129,7 +129,7 @@ void Engine::draw()
 
 
 		// Player
-		m_Window.draw(m_fireMage.getSprite());
+		m_Window.draw(player->getSprite());
 
 		// Snail
 		m_Window.draw(m_Snail.getSprite());
@@ -213,13 +213,13 @@ void Engine::draw()
 
 		m_Window.draw(m_Hud.getDashIcon());
 
-		if (m_fireMage.getDashCooldown() != 3.0) {
+		if (player->getDashCooldown() != 3.0) {
 			m_Window.draw(m_Hud.getDashCooldown());
 		}
 
 		m_Window.draw(m_Hud.getAbilityIcon());
 
-		if (m_fireMage.getRealTimeAbilityCooldown() != 9.0) {
+		if (player->getRealTimeAbilityCooldown() != 9.0) {
 			m_Window.draw(m_Hud.getAbilityCooldown());
 		}
 	}

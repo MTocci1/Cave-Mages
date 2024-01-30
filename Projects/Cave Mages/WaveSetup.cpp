@@ -3,7 +3,7 @@
 
 void Engine::loadWave()
 {
-    m_fireMage.spawn(arena, resolution, TILE_SIZE);
+    player->spawn(arena, resolution, TILE_SIZE);
 
     if (m_WaveNumber != 2) {
         // Calculate how many enemies to spawn
@@ -292,8 +292,8 @@ void Engine::loadWave()
 
     if (m_WaveNumber == 2) 
     {
-        m_Mimic.setup(m_fireMage.getFireRate(), m_fireMage.getSpeed(), m_fireMage.getDamage(), m_fireMage.getAbilityCooldown(),
-            m_fireMage.getAbilityActiveTime(), m_fireMage.getAbilityDamage(), arena, resolution, TILE_SIZE);
+        m_Mimic.setup(player->getFireRate(), player->getSpeed(), player->getDamage(), player->getAbilityCooldown(),
+            player->getAbilityActiveTime(), player->getAbilityDamage(), arena, resolution, TILE_SIZE);
 
         // Update the number of enemies left
         m_EnemiesLeft = 1;

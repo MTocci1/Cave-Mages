@@ -133,6 +133,7 @@
     <ClCompile Include="Ability.cpp" />
     <ClCompile Include="Arena.cpp" />
     <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="CharacterSelection.cpp" />
     <ClCompile Include="Deployable.cpp" />
     <ClCompile Include="DeployableStation.cpp" />
     <ClCompile Include="DeployMenu.cpp" />
@@ -169,6 +170,7 @@
     <ClCompile Include="Update.cpp" />
     <ClCompile Include="Wall.cpp" />
     <ClCompile Include="Water.cpp" />
+    <ClCompile Include="waterMage.cpp" />
     <ClCompile Include="WaveSetup.cpp" />
     <ClCompile Include="XP-Bronze.cpp" />
     <ClCompile Include="XP-Gold.cpp" />
@@ -179,6 +181,7 @@
     <ClInclude Include="Ability.h" />
     <ClInclude Include="Arena.h" />
     <ClInclude Include="Bullet.h" />
+    <ClInclude Include="CharacterSelection.h" />
     <ClInclude Include="Deployable.h" />
     <ClInclude Include="DeployableStation.h" />
     <ClInclude Include="DeployMenu.h" />
@@ -192,6 +195,7 @@
     <ClInclude Include="Ghost.h" />
     <ClInclude Include="HealthStation.h" />
     <ClInclude Include="HUD.h" />
+    <ClInclude Include="waterMage.h" />
     <ClInclude Include="LifeTree.h" />
     <ClInclude Include="LifeTreeBullet.h" />
     <ClInclude Include="MainMenu.h" />
