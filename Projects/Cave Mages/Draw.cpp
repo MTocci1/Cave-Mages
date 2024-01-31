@@ -243,6 +243,23 @@ void Engine::draw()
 		m_Window.draw(spriteCrosshair);
 	}
 
+	if (m_inCharacterSelect) {
+		// Display the CharacterSelect
+		// Set HUD View
+		m_Window.setView(m_HudView);
+
+		m_Window.draw(m_CharacterSelect.getChooseCharacterText());
+
+		m_Window.draw(m_CharacterSelect.getWaterMageIcon());
+
+		m_Window.draw(m_CharacterSelect.getFireMageIcon());
+
+		m_Window.draw(m_CharacterSelect.getUnknownIcon());
+
+		// Crosshair
+		m_Window.draw(spriteCrosshair);
+	}
+
 	// Show everything we have just drawn
 	m_Window.display();
 }

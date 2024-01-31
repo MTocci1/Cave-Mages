@@ -390,29 +390,6 @@ void PlayableCharacter::spentXP(int value)
 	m_XP -= value;
 }
 
-void PlayableCharacter::setFacingDirection(bool isAimingRight)
-{
-	if (isAimingRight)
-	{
-		m_facingRight = true;
-		m_facingLeft = false;
-
-		m_Sprite.setScale(.25, .25);
-
-		m_Sprite.setOrigin(0, 0);
-
-
-	}
-	else {
-		m_facingRight = false;
-		m_facingLeft = true;
-
-		m_Sprite.setScale(-.25, .25);
-
-		m_Sprite.setOrigin(m_Sprite.getLocalBounds().width, 0);
-	}
-}
-
 void PlayableCharacter::updateHitboxes()
 {
 	float headWidth = m_Sprite.getGlobalBounds().width * 0.5f;

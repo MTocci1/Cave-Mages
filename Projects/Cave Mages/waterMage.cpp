@@ -6,7 +6,7 @@ WaterMage::WaterMage()
 	// Associate a texture with the sprite
 	m_Sprite = Sprite(TextureHolder::GetTexture(
 		"graphics/water-mage.png"));
-	m_Sprite.setScale(.25, .25);
+	m_Sprite.setScale(.35, .35);
 
 	// Player Stats
 	// How fast is the character
@@ -133,12 +133,35 @@ void WaterMage::handleInput()
 	// Change Spirte is the player is poisoned
 	if (m_isPoisoned) {
 		m_Sprite = Sprite(TextureHolder::GetTexture(
-			"graphics/fire-mage-poisoned.png"));
+			"graphics/water-mage.png"));
 		m_Sprite.setPosition(m_Position);
 	}
 	else {
 		m_Sprite = Sprite(TextureHolder::GetTexture(
-			"graphics/fire-mage.png"));
+			"graphics/water-mage.png"));
 		m_Sprite.setPosition(m_Position);
+	}
+}
+
+void WaterMage::setFacingDirection(bool isAimingRight)
+{
+	if (isAimingRight)
+	{
+		m_facingRight = true;
+		m_facingLeft = false;
+
+		m_Sprite.setScale(.35, .35);
+
+		m_Sprite.setOrigin(0, 0);
+
+
+	}
+	else {
+		m_facingRight = false;
+		m_facingLeft = true;
+
+		m_Sprite.setScale(-.35, .35);
+
+		m_Sprite.setOrigin(m_Sprite.getLocalBounds().width, 0);
 	}
 }

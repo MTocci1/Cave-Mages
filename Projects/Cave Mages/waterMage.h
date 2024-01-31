@@ -9,4 +9,6 @@ public:
 
 	// The overriden input handler for fire mage
 	void virtual handleInput();
+
+	void virtual setFacingDirection(bool isAimingRight);
 };

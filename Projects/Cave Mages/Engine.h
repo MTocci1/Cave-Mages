@@ -39,6 +39,7 @@
 #include "DeployMenu.h"
 #include "SoundManager.h"
 #include "waterMage.h"
+#include "CharacterSelection.h"
 
 
 using namespace sf;
@@ -106,6 +107,9 @@ private:
 	// The Main Menu
 	MainMenu m_MainMenu;
 
+	// The Character Select
+	CharacterSelect m_CharacterSelect;
+
 	// The deploy menu
 	DeployMenu m_DeployMenu;
 
@@ -171,10 +175,14 @@ private:
 	bool wasHoveringTreeIcon = false;
 	bool wasHoveringPlay = false;
 	bool wasHoveringExit = false;
+	bool wasHoveringFireMageIcon = false;
+	bool wasHoveringWaterMageIcon = false;
+	bool wasHoveringUnknownIcon = false;
 
 	// GAME STATES
 	// Player begins game in main menu
 	bool m_inMainMenu = true;
+	bool m_inCharacterSelect = false;
 	bool m_Playing = false;
 	bool m_PickingDeployable = false;
 

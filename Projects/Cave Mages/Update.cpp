@@ -46,6 +46,25 @@ void Engine::update(float dtAsSeconds)
 		m_DeployMenu.update(turretCost, treeCost);
 	}
 
+	if (m_inCharacterSelect)
+	{
+		// Where is the mouse pointer
+		mouseScreenPosition = Mouse::getPosition();
+
+		// Convert mouse position to world coordinates of HudView
+		mouseWorldPosition = m_Window.mapPixelToCoords(
+			Mouse::getPosition(), m_HudView);
+
+		// Hide the mouse curser
+		m_Window.setMouseCursorVisible(false);
+
+		// Set the crosshair to the mouse world location
+		spriteCrosshair.setPosition(mouseWorldPosition);
+
+		m_CharacterSelect.update();
+	}
+
+
 	if (m_Playing)
 	{
 		// Sound

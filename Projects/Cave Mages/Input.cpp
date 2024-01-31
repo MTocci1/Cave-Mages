@@ -16,10 +16,16 @@ void Engine::input()
 				m_SoundManager.playSelectTab();
 				wasHoveringPlay = true;
 			}
-			if (Mouse::isButtonPressed(Mouse::Left))
+			while (m_Window.pollEvent(event))
 			{
-				m_Playing = true;
-				m_inMainMenu = false;
+				if (event.type == Event::MouseButtonPressed)
+				{
+					if (Mouse::isButtonPressed(Mouse::Left))
+					{
+						m_inCharacterSelect = true;
+						m_inMainMenu = false;
+					}
+				}
 			}
 		}
 		if (!hoveringPlay) {
@@ -114,7 +120,24 @@ void Engine::input()
 				// Handle the player quitting
 				if (Keyboard::isKeyPressed(Keyboard::Escape))
 				{
-					m_Window.close();
+					m_Playing = false;
+					m_inMainMenu = true;
+
+					// Delete all enemies, free memory
+					for (const auto& enemy : enemies) {
+						delete enemy;
+					}
+					// Clear the enemies array
+					enemies.clear();
+
+					// Delete all obstacles, free memory
+					for (const auto& obstacle : obstacles) {
+						delete obstacle;
+					}
+					// Clear the enemies array
+					obstacles.clear();
+
+					m_NewWaveRequired = true;
 				}
 			}
 		}
@@ -136,6 +159,81 @@ void Engine::input()
 		player->handleInput();
 	}
 	
+	// Player Choosing a character
+	if (m_inCharacterSelect) {
+		// Player clicks Fire Mage
+		bool hoveringFireMageIcon = false;
+		if (spriteCrosshair.getGlobalBounds().intersects(m_CharacterSelect.getFireMageIcon().getGlobalBounds()))
+		{
+			hoveringFireMageIcon = true;
+			if (!wasHoveringFireMageIcon) {
+				m_SoundManager.playSelectTab();
+				wasHoveringFireMageIcon = true;
+			}
+			while (m_Window.pollEvent(event))
+			{
+				if (event.type == Event::MouseButtonPressed)
+				{
+					if (Mouse::isButtonPressed(Mouse::Left))
+					{
+						delete player;
+						player = new FireMage();
+						player->spawn(arena, resolution, TILE_SIZE);
+
+						m_Playing = true;
+						m_inCharacterSelect = false;
+					}
+				}
+			}
+		}
+		if (!hoveringFireMageIcon) {
+			wasHoveringFireMageIcon = false;
+		}
+		m_CharacterSelect.setHoveringFireMageIcon(hoveringFireMageIcon);
+
+		// Player clicks water Mage
+		bool hoveringWaterMageIcon = false;
+		if (spriteCrosshair.getGlobalBounds().intersects(m_CharacterSelect.getWaterMageIcon().getGlobalBounds()))
+		{
+			hoveringWaterMageIcon = true;
+			if (!wasHoveringWaterMageIcon) {
+				m_SoundManager.playSelectTab();
+				wasHoveringWaterMageIcon = true;
+			}
+			while (m_Window.pollEvent(event))
+			{
+				if (event.type == Event::MouseButtonPressed)
+				{
+					if (Mouse::isButtonPressed(Mouse::Left))
+					{
+						delete player;
+						player = new WaterMage();
+						player->spawn(arena, resolution, TILE_SIZE);
+						m_Playing = true;
+						m_inCharacterSelect = false;
+					}
+				}
+			}
+		}
+		if (!hoveringWaterMageIcon) {
+			wasHoveringWaterMageIcon = false;
+		}
+		m_CharacterSelect.setHoveringWaterMageIcon(hoveringWaterMageIcon);
+
+		while (m_Window.pollEvent(event))
+		{
+			if (event.type == Event::KeyPressed)
+			{
+				// Handle the player quitting
+				if (Keyboard::isKeyPressed(Keyboard::Escape))
+				{
+					m_inMainMenu = true;
+					m_inCharacterSelect = false;
+				}
+			}
+		}
+	}
+
 	// Player picking deployable
 	if (m_PickingDeployable) {
 		// Player clicks turret

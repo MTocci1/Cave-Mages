@@ -142,3 +142,26 @@ void FireMage::handleInput()
 		m_Sprite.setPosition(m_Position);
 	}
 }
+
+void FireMage::setFacingDirection(bool isAimingRight)
+{
+	if (isAimingRight)
+	{
+		m_facingRight = true;
+		m_facingLeft = false;
+
+		m_Sprite.setScale(.25, .25);
+
+		m_Sprite.setOrigin(0, 0);
+
+
+	}
+	else {
+		m_facingRight = false;
+		m_facingLeft = true;
+
+		m_Sprite.setScale(-.25, .25);
+
+		m_Sprite.setOrigin(m_Sprite.getLocalBounds().width, 0);
+	}
+}

@@ -171,7 +171,7 @@ public:
 
 	void startAbilityCooldown();
 
-	void setFacingDirection(bool isAimingRight);
+	void virtual setFacingDirection(bool isAimingRight) = 0;
 
 	// Hitboxes
 	void updateHitboxes();
